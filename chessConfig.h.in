@@ -1,0 +1,3 @@
+#define chess_VERSION_MAJOR @chess_VERSION_MAJOR@
+#define chess_VERSION_MINOR @chess_VERSION_MINOR@
+#define chess_VERSION_PATCH @chess_VERSION_PATCH@
