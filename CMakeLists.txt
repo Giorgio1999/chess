@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(chess VERSION 1.0.0)
-add_library(chess src/chess.cpp src/engine.cpp)
+add_library(chess src/chess.cpp src/engine.cpp src/engine_handler.cpp)
 
 target_include_directories(chess PUBLIC
     include

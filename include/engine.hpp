@@ -23,6 +23,7 @@ class Engine
     }
 
     std::string Introduce ();
+    std::string Search ();
 
     std::string
     GetName ()
