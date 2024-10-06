@@ -14,10 +14,4 @@ Welcome ()
     return message;
 }
 
-std::string
-Search ()
-{
-    engine::Engine *engine = new engine::Engine ("example_engine", "example_author");
-    return engine->Search ();
-}
 }

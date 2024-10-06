@@ -1,6 +1,7 @@
 #ifndef ENGINE_ENGINE_HPP
 #define ENGINE_ENGINE_HPP
 #include <string>
+#include <functional>
 
 namespace chess
 {
@@ -14,6 +15,7 @@ class Engine
     int version_major = 1;
     int version_minor = 0;
     int version_patch = 0;
+    std::function<std::string (Engine &)> search;
 
   public:
     Engine (std::string name, std::string author)
@@ -23,7 +25,11 @@ class Engine
     }
 
     std::string Introduce ();
-    std::string Search ();
+    std::string
+    Search ()
+    {
+        return search (*this);
+    }
 
     std::string
     GetName ()
@@ -50,6 +56,12 @@ class Engine
     {
         return version_patch;
     }
+    std::function<std::string (Engine &)>
+    GetSearch ()
+    {
+        return search;
+    }
+
     void
     SetName (std::string _name)
     {
@@ -74,6 +86,11 @@ class Engine
     SetVersion_Patch (int _version_patch)
     {
         version_patch = _version_patch;
+    }
+    void
+    SetSearch (std::function<std::string (Engine &)> _search)
+    {
+        search = _search;
     }
 };
 

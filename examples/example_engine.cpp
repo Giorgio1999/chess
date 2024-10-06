@@ -1,11 +1,11 @@
 #include "chess.hpp"
 #include <iostream>
 
-// std::string
-// chess::engine::Engine::Search ()
-//{
-// return "TO DO";
-//}
+std::string
+Search (chess::engine::Engine &engine)
+{
+    return "TO DO";
+}
 
 int
 main ()
@@ -14,6 +14,8 @@ main ()
     engine.SetVersion_Major (1);
     engine.SetVersion_Minor (0);
     engine.SetVersion_Patch (0);
+    engine.SetSearch (Search);
     std::cout << engine.Introduce () << std::endl;
+    std::cout << engine.Search () << std::endl;
     return 0;
 }
