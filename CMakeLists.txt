@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(chess VERSION 1.0.0)
-add_library(chess src/chess.cpp)
+add_library(chess src/chess.cpp src/engine.cpp)
 
 target_include_directories(chess PUBLIC
     include
@@ -21,6 +21,13 @@ target_compile_options(chess PRIVATE
 add_executable(example_program examples/example_program.cpp)
 target_link_libraries(example_program PRIVATE chess)
 set_target_properties(example_program PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+)
+
+add_executable(example_engine examples/example_engine.cpp)
+target_link_libraries(example_engine PRIVATE chess)
+set_target_properties(example_engine PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
 )

@@ -2,6 +2,7 @@
 #define CHESS_CHESS_H
 
 #include <string>
+#include "engine.hpp"
 
 namespace chess
 {
