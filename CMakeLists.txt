@@ -41,3 +41,6 @@ install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
 execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_BINARY_DIR}/compile_commands.json ${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json)
 configure_file(chessConfig.h.in chessConfig.h)
 
+add_subdirectory(tests)
+enable_testing()
+

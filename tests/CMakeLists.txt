@@ -1,0 +1,6 @@
+file(GLOB TEST_SOURCES "*.cpp")
+add_executable(tests ${TEST_SOURCES})
+target_include_directories(tests PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_CURRENT_BINARY_DIR})
+target_link_libraries(tests PRIVATE chess gtest gtest_main)
+enable_testing()
+add_test(NAME tests COMMAND tests)
