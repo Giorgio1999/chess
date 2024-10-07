@@ -1,9 +1,16 @@
 #include "chess.hpp"
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 std::string
 Search (chess::engine::Engine &engine)
 {
+    while (engine.IsStop () == false)
+        {
+            std::cout << "waiting" << std::endl;
+            std::this_thread::sleep_for (std::chrono::seconds (1));
+        }
     return "TO DO";
 }
 
@@ -15,7 +22,6 @@ main ()
     engine.SetVersion_Minor (0);
     engine.SetVersion_Patch (0);
     engine.SetSearch (Search);
-    std::cout << engine.Introduce () << std::endl;
-    std::cout << engine.Search () << std::endl;
+    chess::engine::Handler handler (engine, std::cin, std::cout);
     return 0;
 }

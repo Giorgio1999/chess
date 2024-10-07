@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(chess VERSION 1.0.0)
-add_library(chess src/chess.cpp src/engine.cpp src/engine_handler.cpp)
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+add_library(chess ${SOURCES})
 
 target_include_directories(chess PUBLIC
     include

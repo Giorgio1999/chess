@@ -3,8 +3,12 @@
 
 #include <string>
 #include <iostream>
+#include <functional>
+#include "engine.hpp"
 
-const std::string release = "realease";
+typedef std::function<std::string (chess::engine::Engine &, std::string)> Command;
+
+const std::string release = "release";
 const std::string debug = "debug";
 
 #ifdef NDEBUG

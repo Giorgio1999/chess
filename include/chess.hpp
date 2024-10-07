@@ -3,6 +3,7 @@
 
 #include <string>
 #include "engine.hpp"
+#include "engine_handler.hpp"
 
 namespace chess
 {

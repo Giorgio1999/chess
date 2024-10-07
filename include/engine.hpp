@@ -16,6 +16,8 @@ class Engine
     int version_minor = 0;
     int version_patch = 0;
     std::function<std::string (Engine &)> search;
+    bool stop = false;
+    bool ready = false;
 
   public:
     Engine (std::string name, std::string author)
@@ -25,6 +27,8 @@ class Engine
     }
 
     std::string Introduce ();
+    void Stop ();
+    void UnStop ();
     std::string
     Search ()
     {
@@ -61,6 +65,16 @@ class Engine
     {
         return search;
     }
+    bool
+    IsReady ()
+    {
+        return ready;
+    }
+    bool
+    IsStop ()
+    {
+        return stop;
+    }
 
     void
     SetName (std::string _name)
@@ -91,6 +105,11 @@ class Engine
     SetSearch (std::function<std::string (Engine &)> _search)
     {
         search = _search;
+    }
+    void
+    SetReady (bool _ready)
+    {
+        ready = _ready;
     }
 };
 
