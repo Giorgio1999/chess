@@ -5,11 +5,14 @@
 #include <iostream>
 #include <functional>
 #include "engine.hpp"
+#include <cstdint>
 
 typedef std::function<std::string (chess::engine::Engine &, std::string)> Command;
+typedef uint64_t bitboard;
 
 const std::string release = "release";
 const std::string debug = "debug";
+const std::string pieces = "PNBRQKpnbqk";
 
 #ifdef NDEBUG
 #define CERR                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       \
