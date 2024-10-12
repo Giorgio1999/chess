@@ -45,20 +45,20 @@ Board::flip_enpassantable ()
 }
 
 void
-Board::flip_castling (castling_rights_name _castling)
+Board::flip_castling (chess::consts::castling_rights_name _castling)
 {
     switch (_castling)
         {
-        case K:
+        case chess::consts::castling_rights_name::CASTLE_K:
             flags::flip_K (board_flag);
             break;
-        case Q:
+        case chess::consts::castling_rights_name::CASTLE_Q:
             flags::flip_Q (board_flag);
             break;
-        case k:
+        case chess::consts::castling_rights_name::CASTLE_k:
             flags::flip_k (board_flag);
             break;
-        case q:
+        case chess::consts::castling_rights_name::CASTLE_q:
             flags::flip_q (board_flag);
             break;
         }
@@ -89,21 +89,40 @@ Board::ShowBoard ()
         {
             for (int j = 0; j < 8; j++)
                 {
-                    board_visual += field_occupations[i * 8 + j];
-                    board_visual += " ";
+                    std::string piece = field_occupations[i * 8 + j];
+                    if (piece == "")
+                        {
+                            piece = "-";
+                        }
+                    board_visual += piece;
                 }
             board_visual += "\n";
         }
-    board_visual += "Flags: ";
+    board_visual += "Flags:";
     board_visual += white_to_play () ? "w" : "b";
-    board_visual += " ";
-    board_visual += enpassantable () ? std::to_string (ghost_position) : "-";
-    board_visual += " ";
+    board_visual += "";
+    board_visual += enpassantable () ? square2string (ghost_position) : "-";
+    board_visual += "";
     board_visual += castling ().K ? "K" : "-";
     board_visual += castling ().Q ? "Q" : "-";
     board_visual += castling ().k ? "k" : "-";
     board_visual += castling ().q ? "q" : "-";
     board_visual += "\n";
     return board_visual;
+}
+
+void
+Board::flip_ghost_board (const int square)
+{
+    bitboard_helper::flip_bit (ghost_board, square);
+}
+
+std::string
+square2string (const int square)
+{
+    std::string res = "";
+    res += consts::squares[square * 2];
+    res += consts::squares[square * 2 + 1];
+    return res;
 }
 }

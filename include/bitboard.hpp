@@ -7,6 +7,7 @@ namespace chess
 namespace bitboard_helper
 {
 int pop_lsb (consts::bitboard &b);
+void flip_bit (consts::bitboard &b, const int square);
 }
 }
 

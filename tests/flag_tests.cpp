@@ -51,36 +51,36 @@ TEST (flag_tests, flag_test_speed)
 
 TEST (board_flag_tests, board_flag_test_wtp)
 {
-    chess::consts::flag b = chess::consts::WTP;
+    chess::consts::flag b = chess::consts::WTP_FLAG;
     EXPECT_EQ (chess::flags::is_wtp (b), true);
 }
 
 TEST (board_flag_tests, board_flag_test_enp)
 {
-    chess::consts::flag b = chess::consts::ENP;
+    chess::consts::flag b = chess::consts::ENP_FLAG;
     EXPECT_EQ (chess::flags::is_enp (b), true);
 }
 
 TEST (board_flag_tests, board_flag_test_K)
 {
-    chess::consts::flag b = chess::consts::K;
+    chess::consts::flag b = chess::consts::K_FLAG;
     EXPECT_EQ (chess::flags::is_K (b), true);
 }
 
 TEST (board_flag_tests, board_flag_test_k)
 {
-    chess::consts::flag b = chess::consts::k;
+    chess::consts::flag b = chess::consts::k_FLAG;
     EXPECT_EQ (chess::flags::is_k (b), true);
 }
 
 TEST (board_flag_tests, board_flag_test_Q)
 {
-    chess::consts::flag b = chess::consts::Q;
+    chess::consts::flag b = chess::consts::Q_FLAG;
     EXPECT_EQ (chess::flags::is_Q (b), true);
 }
 
 TEST (board_flag_tests, board_flag_test_q)
 {
-    chess::consts::flag b = chess::consts::q;
+    chess::consts::flag b = chess::consts::q_FLAG;
     EXPECT_EQ (chess::flags::is_q (b), true);
 }

@@ -13,14 +13,6 @@ struct castle_rights
     bool q = true;
 };
 
-enum castling_rights_name
-{
-    K,
-    Q,
-    k,
-    q
-};
-
 namespace chess
 {
 class Board
@@ -28,7 +20,7 @@ class Board
   private:
     std::array<consts::bitboard, 12> piece_boards;
     consts::bitboard ghost_board = 0;
-    consts::flag board_flag = consts::BOARD_FLAG_MAX;
+    consts::flag board_flag = 0b10111101;
 
   public:
     Board ();
@@ -38,8 +30,10 @@ class Board
     castle_rights castling ();
     void flip_white_to_play ();
     void flip_enpassantable ();
-    void flip_castling (castling_rights_name _castling);
+    void flip_castling (chess::consts::castling_rights_name _castling);
+    void flip_ghost_board (const int square);
 };
+std::string square2string (const int square);
 }
 
 #endif

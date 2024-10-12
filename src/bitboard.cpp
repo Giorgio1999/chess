@@ -16,5 +16,11 @@ pop_lsb (consts::bitboard &b)
         }
     return res;
 }
+
+void
+flip_bit (consts::bitboard &b, const int square)
+{
+    b ^= (consts::bitboard)1 << square;
+}
 }
 }
