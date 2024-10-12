@@ -37,7 +37,7 @@ TEST (engine_handler_tests, engine_handler_uci)
     std::string response_string = Response ("uci\n");
     std::string expected_response = "id name test_engine 1.0.0";
     expected_response += " chess " + std::to_string (chess_VERSION_MAJOR) + "." + std::to_string (chess_VERSION_MINOR) + "." + std::to_string (chess_VERSION_PATCH) + " ";
-    expected_response += CONFIGURATION + "\n";
+    expected_response += chess::consts::CONFIGURATION + "\n";
     expected_response += "id author test_author\nuciok\n";
     EXPECT_EQ (response_string, expected_response);
 }
@@ -61,7 +61,7 @@ TEST (engine_handler_tests, engine_handler_isready)
     std::string response_string = Response ("uci\nisready\n");
     std::string expected_response = "id name test_engine 1.0.0";
     expected_response += " chess " + std::to_string (chess_VERSION_MAJOR) + "." + std::to_string (chess_VERSION_MINOR) + "." + std::to_string (chess_VERSION_PATCH) + " ";
-    expected_response += CONFIGURATION + "\n";
+    expected_response += chess::consts::CONFIGURATION + "\n";
     expected_response += "id author test_author\nuciok\n";
     expected_response += "readyok\n";
     EXPECT_EQ (response_string, expected_response);

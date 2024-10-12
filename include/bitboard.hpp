@@ -6,7 +6,7 @@ namespace chess
 {
 namespace bitboard_helper
 {
-int pop_lsb (bitboard &b);
+int pop_lsb (consts::bitboard &b);
 }
 }
 

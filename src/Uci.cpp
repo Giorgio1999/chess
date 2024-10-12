@@ -117,7 +117,7 @@ Uci::Uci ()
     commands["isready"] = isready;
     commands["go"] = go;
 }
-Command
+consts::Command
 Uci::operator[] (std::string _command)
 {
     // Regex to find words separated by whitespaces

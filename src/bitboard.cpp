@@ -7,12 +7,12 @@ namespace chess
 namespace bitboard_helper
 {
 int
-pop_lsb (bitboard &b)
+pop_lsb (consts::bitboard &b)
 {
     int res = __builtin_ffsll (b) - 1;
     if (res > -1)
         {
-            b ^= (bitboard)1 << res;
+            b ^= (consts::bitboard)1 << res;
         }
     return res;
 }

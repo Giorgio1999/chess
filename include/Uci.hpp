@@ -14,11 +14,11 @@ namespace interface
 struct Uci
 {
   private:
-    std::unordered_map<std::string, Command> commands;
+    std::unordered_map<std::string, consts::Command> commands;
 
   public:
     Uci ();
-    Command operator[] (std::string command);
+    consts::Command operator[] (std::string command);
 };
 }
 }
