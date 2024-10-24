@@ -2,6 +2,7 @@
 #define ENGINE_ENGINE_HPP
 #include <string>
 #include <functional>
+#include "board.hpp"
 
 namespace chess
 {
@@ -18,12 +19,14 @@ class Engine
     std::function<std::string (Engine &)> search;
     bool stop = false;
     bool ready = false;
+    chess::board::Board board;
 
   public:
     Engine (std::string name, std::string author)
     {
         this->name = name;
         this->author = author;
+        board = chess::board::Board ();
     }
 
     std::string Introduce ();
@@ -33,6 +36,11 @@ class Engine
     Search ()
     {
         return search (*this);
+    }
+    std::string
+    ShowBoard ()
+    {
+        return board.ShowBoard ();
     }
 
     std::string

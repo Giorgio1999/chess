@@ -90,6 +90,20 @@ go (chess::engine::Engine &engine, std::string _command)
     return engine.Search ();
 }
 
+std::string
+showboard (chess::engine::Engine &engine, std::string _command)
+{
+    std::string args;
+    std::string command;
+    Split (_command, args);
+
+    if (args != "")
+        {
+            CERR << "Unknown args: " << args << std::endl;
+        }
+    return engine.ShowBoard ();
+}
+
 void
 Split (std::string &command, std::string &args)
 {
@@ -116,6 +130,7 @@ Uci::Uci ()
     // commands["stop"] = stop;
     commands["isready"] = isready;
     commands["go"] = go;
+    commands["showboard"] = showboard;
 }
 consts::Command
 Uci::operator[] (std::string _command)

@@ -4,11 +4,14 @@
 #include <string>
 #include <iostream>
 #include <functional>
-#include "engine.hpp"
 #include <cstdint>
 
 namespace chess
 {
+namespace engine
+{
+class Engine;
+}
 namespace consts
 {
 typedef std::function<std::string (chess::engine::Engine &, std::string)> Command;

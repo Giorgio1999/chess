@@ -1,6 +1,6 @@
 #ifndef FLAGS_FLAGS_HPP
 #define FLAGS_FLAGS_HPP
-#include <Defs.hpp>
+#include "Defs.hpp"
 
 namespace chess
 {

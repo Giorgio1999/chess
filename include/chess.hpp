@@ -4,6 +4,8 @@
 #include <string>
 #include "engine.hpp"
 #include "engine_handler.hpp"
+#include "board.hpp"
+#include "Defs.hpp"
 
 namespace chess
 {

@@ -15,6 +15,8 @@ struct castle_rights
 
 namespace chess
 {
+namespace board
+{
 class Board
 {
   private:
@@ -34,6 +36,7 @@ class Board
     void flip_ghost_board (const int square);
 };
 std::string square2string (const int square);
+}
 }
 
 #endif

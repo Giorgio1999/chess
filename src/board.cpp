@@ -6,7 +6,8 @@
 
 namespace chess
 {
-
+namespace board
+{
 Board::Board ()
 {
     for (int i = 0; i < 12; i++)
@@ -124,5 +125,6 @@ square2string (const int square)
     res += consts::squares[square * 2];
     res += consts::squares[square * 2 + 1];
     return res;
+}
 }
 }
