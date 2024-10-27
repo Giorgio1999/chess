@@ -31,10 +31,13 @@ class Board
     bool enpassantable ();
     castle_rights castling ();
     void flip_white_to_play ();
-    void flip_enpassantable ();
+    void set_enpassantable ();
+    void clear_enpassantable ();
     void flip_castling (chess::consts::castling_rights_name _castling);
+    void clear_castling (chess::consts::castling_rights_name _castling);
     void flip_ghost_board (const int square);
     void set_piece (const int square, const consts::Piece _piece);
+    void makeMove (const consts::move move);
 };
 std::string square2string (const int square);
 int string2square (const std::string string);

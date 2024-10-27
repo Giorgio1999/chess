@@ -1,8 +1,8 @@
+#include <chrono>
 #include <gtest/gtest.h>
 #include "engine_handler.hpp"
 #include "engine.hpp"
 #include "chessConfig.h"
-
 std::string
 Search (chess::engine::Engine &engine)
 {
@@ -97,7 +97,27 @@ TEST (engine_handler_tests, engine_handler_position_fen_alt)
 
 TEST (engine_handler_tests, engine_handler_position_moves)
 {
-    std::string response_string = Response ("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPP1/RNBQKBNR w KQkq - 0 1\nmoves e2e4 e7e5\nshowboard\n");
+    std::string response_string = Response ("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves e2e4 e7e5\nshowboard\n");
     std::string expected_response = "\nrnbqkbnr\npppp-ppp\n----g---\n----p---\n----P---\n--------\nPPPP-PPP\nRNBQKBNR\nFlags:we6KQkq\n\n";
     EXPECT_EQ (response_string, expected_response);
+}
+
+TEST (engine_handler_tests, engine_handler_position_moves_takes)
+{
+    std::string request_string = Response ("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves a1a8 h1h8\nshowboard\n");
+    std::string expected_response = "\nRnbqkbnR\npppppppp\n--------\n--------\n--------\n--------\nPPPPPPPP\n-NBQKBN-\nFlags:w-----\n\n";
+    EXPECT_EQ (request_string, expected_response);
+}
+
+TEST (engine_handler_tests, engine_handler_position_speed)
+{
+    auto now = std::chrono::high_resolution_clock::now ();
+    for (int i = 0; i < 1000; i++)
+        {
+            std::string response_string = Response ("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves e2e4 e7e5 a1a8 h8h1\n");
+        }
+    auto end = std::chrono::high_resolution_clock::now ();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds> (end - now).count ();
+    std::cout << "1000 position calls in: " << duration << " ms / " << duration / 1000 << "pcs" << std::endl;
+    EXPECT_GE (duration, 0);
 }

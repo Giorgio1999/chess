@@ -141,11 +141,11 @@ position (chess::engine::Engine &engine, std::string _command)
         {
             if (args[6 + offset] == "moves")
                 {
-                    std::vector<chess::consts::move> moves;
                     for (auto i = (size_t)7 + offset; i < args.size (); i++)
                         {
                             CERR << "Move: " << args[i] << " " << chess::moves::string2move (args[i]) << std::endl;
-                            moves.push_back (chess::moves::string2move (args[i]));
+                            chess::consts::move move = chess::moves::string2move (args[i]);
+                            std::string dum = engine.MakeMove (move);
                         }
                 }
             else

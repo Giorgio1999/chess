@@ -90,7 +90,7 @@ parse (const std::string &fen, board::Board &board)
     if (en_passant != "-")
         {
             CERR << en_passant << std::endl;
-            board.flip_enpassantable ();
+            board.set_enpassantable ();
             board.flip_ghost_board (board::string2square (en_passant));
         }
 }

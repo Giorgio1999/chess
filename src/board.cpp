@@ -1,6 +1,8 @@
 #include "board.hpp"
+#include "Defs.hpp"
 #include "bitboard.hpp"
 #include "flags.hpp"
+#include "moves.hpp"
 #include <string>
 #include <array>
 
@@ -52,9 +54,15 @@ Board::flip_white_to_play ()
 }
 
 void
-Board::flip_enpassantable ()
+Board::set_enpassantable ()
 {
-    flags::flip_enp (board_flag);
+    flags::set_enp (board_flag);
+}
+
+void
+Board::clear_enpassantable ()
+{
+    flags::clear_enp (board_flag);
 }
 
 void
@@ -73,6 +81,26 @@ Board::flip_castling (chess::consts::castling_rights_name _castling)
             break;
         case chess::consts::castling_rights_name::CASTLE_q:
             flags::flip_q (board_flag);
+            break;
+        }
+}
+
+void
+Board::clear_castling (chess::consts::castling_rights_name _castling)
+{
+    switch (_castling)
+        {
+        case chess::consts::castling_rights_name::CASTLE_K:
+            flags::clear_K (board_flag);
+            break;
+        case chess::consts::castling_rights_name::CASTLE_Q:
+            flags::clear_Q (board_flag);
+            break;
+        case chess::consts::castling_rights_name::CASTLE_k:
+            flags::clear_k (board_flag);
+            break;
+        case chess::consts::castling_rights_name::CASTLE_q:
+            flags::clear_q (board_flag);
             break;
         }
 }
@@ -157,5 +185,85 @@ Board::set_piece (const int square, const consts::Piece _piece)
 {
     bitboard_helper::flip_bit (piece_boards[_piece], square);
 }
+
+void
+Board::makeMove (const consts::move move)
+{
+    int startsquare = moves::getStartSquare (move);
+    consts::bitboard from = (consts::bitboard)1 << startsquare;
+    consts::Piece movepiece = consts::Piece::empty;
+    for (int i = 0; i < 12; i++)
+        {
+            consts::bitboard tmp_board = piece_boards[i] & from;
+            if (tmp_board > 0)
+                {
+                    movepiece = (consts::Piece)i;
+                    break;
+                }
+        }
+    int endsquare = moves::getEndSquare (move);
+    consts::bitboard to = (consts::bitboard)1 << endsquare;
+    consts::Piece takepiece = consts::Piece::empty;
+    for (int i = 0; i < 12; i++)
+        {
+            consts::bitboard tmp_board = piece_boards[i] & to;
+            if (tmp_board > 0)
+                {
+                    takepiece = (consts::Piece)i;
+                    break;
+                }
+        }
+    piece_boards[movepiece] ^= from;
+    piece_boards[movepiece] ^= to;
+    if (takepiece != consts::Piece::empty)
+        {
+            piece_boards[takepiece] ^= to;
+        }
+    ghost_board = 0;
+    clear_enpassantable ();
+    if (movepiece == consts::Piece::P || movepiece == consts::Piece::p)
+        {
+            if (std::abs (startsquare - endsquare) == 16)
+                {
+                    set_enpassantable ();
+                    if (white_to_play ())
+                        {
+                            ghost_board ^= to << 8;
+                        }
+                    else
+                        {
+                            ghost_board ^= to >> 8;
+                        }
+                }
+        }
+    if (movepiece == consts::Piece::k)
+        {
+            clear_castling (consts::castling_rights_name::CASTLE_k);
+            clear_castling (consts::castling_rights_name::CASTLE_q);
+        }
+    if (movepiece == consts::Piece::K)
+        {
+            clear_castling (consts::castling_rights_name::CASTLE_K);
+            clear_castling (consts::castling_rights_name::CASTLE_Q);
+        }
+    if (startsquare == consts::Square::H1 || endsquare == consts::Square::H1)
+        {
+            clear_castling (consts::castling_rights_name::CASTLE_K);
+        }
+    if (startsquare == consts::Square::A1 || endsquare == consts::Square::A1)
+        {
+            clear_castling (consts::castling_rights_name::CASTLE_Q);
+        }
+    if (startsquare == consts::Square::H8 || endsquare == consts::Square::H8)
+        {
+            clear_castling (consts::castling_rights_name::CASTLE_k);
+        }
+    if (startsquare == consts::Square::A8 || endsquare == consts::Square::A8)
+        {
+            clear_castling (consts::castling_rights_name::CASTLE_q);
+        }
+    flip_white_to_play ();
+}
+
 }
 }

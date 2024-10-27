@@ -69,9 +69,15 @@ flip_wtp (consts::flag &_board_flag)
     flip_board (_board_flag, consts::WTP_FLAG);
 }
 void
-flip_enp (consts::flag &_board_flag)
+set_enp (consts::flag &_board_flag)
 {
-    flip_board (_board_flag, consts::ENP_FLAG);
+    _board_flag |= consts::ENP_FLAG;
+}
+
+void
+clear_enp (consts::flag &_board_flag)
+{
+    _board_flag &= ~consts::ENP_FLAG;
 }
 void
 flip_Q (consts::flag &_board_flag)
@@ -93,6 +99,26 @@ void
 flip_k (consts::flag &_board_flag)
 {
     flip_board (_board_flag, consts::k_FLAG);
+}
+void
+clear_Q (consts::flag &_board_flag)
+{
+    _board_flag &= ~consts::Q_FLAG;
+}
+void
+clear_K (consts::flag &_board_flag)
+{
+    _board_flag &= ~consts::K_FLAG;
+}
+void
+clear_q (consts::flag &_board_flag)
+{
+    _board_flag &= ~consts::q_FLAG;
+}
+void
+clear_k (consts::flag &_board_flag)
+{
+    _board_flag &= ~consts::k_FLAG;
 }
 }
 }

@@ -16,11 +16,16 @@ bool is_K (const consts::flag &_board_flag);
 bool is_q (const consts::flag &_board_flag);
 bool is_k (const consts::flag &_board_flag);
 void flip_wtp (consts::flag &_board_flag);
-void flip_enp (consts::flag &_board_flag);
+void set_enp (consts::flag &_board_flag);
+void clear_enp (consts::flag &_board_flag);
 void flip_Q (consts::flag &_board_flag);
 void flip_K (consts::flag &_board_flag);
 void flip_q (consts::flag &_board_flag);
 void flip_k (consts::flag &_board_flag);
+void clear_Q (consts::flag &_board_flag);
+void clear_K (consts::flag &_board_flag);
+void clear_q (consts::flag &_board_flag);
+void clear_k (consts::flag &_board_flag);
 }
 }
 

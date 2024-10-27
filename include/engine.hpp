@@ -43,6 +43,12 @@ class Engine
         return board.ShowBoard ();
     }
     std::string Position (std::string _position);
+    std::string
+    MakeMove (consts::move move)
+    {
+        board.makeMove (move);
+        return "";
+    }
 
     std::string
     GetName ()

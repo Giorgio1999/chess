@@ -53,7 +53,7 @@ TEST (board_tests, board_test_6)
 TEST (board_tests, board_test_7)
 {
     chess::board::Board b;
-    b.flip_enpassantable ();
+    b.set_enpassantable ();
     b.flip_ghost_board (63);
     std::string expected = "--------\n--------\n--------\n--------\n--------\n--------\n--------\n-------G\nFlags:bh1----\n";
     EXPECT_EQ (b.ShowBoard (), expected);
