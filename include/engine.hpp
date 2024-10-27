@@ -42,6 +42,7 @@ class Engine
     {
         return board.ShowBoard ();
     }
+    std::string Position (std::string _position);
 
     std::string
     GetName ()

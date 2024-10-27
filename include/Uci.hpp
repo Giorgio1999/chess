@@ -6,6 +6,7 @@
 #include <functional>
 #include <unordered_map>
 #include <stdexcept>
+#include <vector>
 
 namespace chess
 {
@@ -28,7 +29,9 @@ std::string quit (chess::engine::Engine &engine, std::string _command);
 std::string stop (chess::engine::Engine &engine, std::string _command);
 std::string isready (chess::engine::Engine &engine, std::string _command);
 std::string go (chess::engine::Engine &engine, std::string _command);
+std::string showboard (chess::engine::Engine &engine, std::string _command);
+std::string position (chess::engine::Engine &engine, std::string _command);
 
-void Split (std::string &command, std::string &args);
+void Split (std::string &command, std::vector<std::string> &args);
 
 #endif

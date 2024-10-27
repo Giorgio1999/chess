@@ -1,6 +1,7 @@
 #include "engine.hpp"
 #include "Defs.hpp"
 #include "chessConfig.h"
+#include "fen.hpp"
 #include <string>
 #include <mutex>
 
@@ -31,6 +32,12 @@ Engine::UnStop ()
     std::lock_guard<std::mutex> lock (stop_mutex);
     CERR << "Engine un-stopped" << std::endl;
     stop = false;
+}
+std::string
+Engine::Position (std::string _position)
+{
+    fen::parse (_position, board);
+    return "";
 }
 }
 }

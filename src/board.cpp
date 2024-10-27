@@ -16,6 +16,18 @@ Board::Board ()
         }
 }
 
+void
+Board::init ()
+{
+
+    for (int i = 0; i < 12; i++)
+        {
+            piece_boards[i] = 0;
+        }
+    ghost_board = 0;
+    board_flag = 0;
+}
+
 bool
 Board::white_to_play ()
 {
@@ -83,7 +95,7 @@ Board::ShowBoard ()
     while (ghost_board_tmp > 0)
         {
             ghost_position = chess::bitboard_helper::pop_lsb (ghost_board_tmp);
-            field_occupations[ghost_position] = white_to_play () ? consts::pieces[12] : consts::pieces[13];
+            field_occupations[ghost_position] = white_to_play () ? consts::pieces[13] : consts::pieces[12];
         }
     std::string board_visual = "";
     for (int i = 0; i < 8; i++)
@@ -125,6 +137,25 @@ square2string (const int square)
     res += consts::squares[square * 2];
     res += consts::squares[square * 2 + 1];
     return res;
+}
+
+int
+string2square (const std::string string)
+{
+    for (int i = 0; i < 64; i++)
+        {
+            if (consts::squares[i * 2] == string[0] && consts::squares[i * 2 + 1] == string[1])
+                {
+                    return i;
+                }
+        }
+    return -1;
+}
+
+void
+Board::set_piece (const int square, const consts::Piece _piece)
+{
+    bitboard_helper::flip_bit (piece_boards[_piece], square);
 }
 }
 }

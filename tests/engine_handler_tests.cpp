@@ -66,3 +66,38 @@ TEST (engine_handler_tests, engine_handler_isready)
     expected_response += "readyok\n";
     EXPECT_EQ (response_string, expected_response);
 }
+
+TEST (engine_handler_tests, engine_handler_position_startpos)
+{
+    std::string response_string = Response ("position startpos\nshowboard\n");
+    std::string expected_response = "\nrnbqkbnr\npppppppp\n--------\n--------\n--------\n--------\nPPPPPPPP\nRNBQKBNR\nFlags:w-KQkq\n\n";
+    EXPECT_EQ (response_string, expected_response);
+}
+
+TEST (engine_handler_tests, engine_handler_position_fen)
+{
+    std::string response_string = Response ("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPP1/RNBQKBNR b KQkq - 0 1\nshowboard\n");
+    std::string expected_response = "\nrnbqkbnr\npppppppp\n--------\n--------\n--------\n--------\nPPPPPPP-\nRNBQKBNR\nFlags:b-KQkq\n\n";
+    EXPECT_EQ (response_string, expected_response);
+}
+
+TEST (engine_handler_tests, engine_handler_position_fen_wenp)
+{
+    std::string response_string = Response ("position rnbqkbnr/pppppppp/8/8/7P/8/PPPPPPP1/RNBQKBNR b KQkq h3 0 1\nshowboard\n");
+    std::string expected_response = "\nrnbqkbnr\npppppppp\n--------\n--------\n-------P\n-------G\nPPPPPPP-\nRNBQKBNR\nFlags:bh3KQkq\n\n";
+    EXPECT_EQ (response_string, expected_response);
+}
+
+TEST (engine_handler_tests, engine_handler_position_fen_alt)
+{
+    std::string response_string = Response ("position fen rnbqkbnr/pppppppp/8/8/7P/8/PPPPPPP1/RNBQKBNR b KQkq h3 0 1\nshowboard\n");
+    std::string expected_response = "\nrnbqkbnr\npppppppp\n--------\n--------\n-------P\n-------G\nPPPPPPP-\nRNBQKBNR\nFlags:bh3KQkq\n\n";
+    EXPECT_EQ (response_string, expected_response);
+}
+
+TEST (engine_handler_tests, engine_handler_position_moves)
+{
+    std::string response_string = Response ("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPP1/RNBQKBNR w KQkq - 0 1\nmoves e2e4 e7e5\nshowboard\n");
+    std::string expected_response = "\nrnbqkbnr\npppp-ppp\n----g---\n----p---\n----P---\n--------\nPPPP-PPP\nRNBQKBNR\nFlags:we6KQkq\n\n";
+    EXPECT_EQ (response_string, expected_response);
+}

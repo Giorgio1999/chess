@@ -17,13 +17,18 @@ namespace consts
 typedef std::function<std::string (chess::engine::Engine &, std::string)> Command;
 typedef uint64_t bitboard;
 typedef uint8_t flag;
+typedef uint16_t move;
 
 const std::string release = "release";
 const std::string debug = "debug";
-const std::string pieces = "PNBRQKpnbqkGg";
-const std::string squares = "A1B1C1D1E1F1G1H1A2B2C2D2E2F2G2H2A3B3C3D3E3F3G3H3A4B4C4D4E4F4G4H4A5B5C5D5E5F5G5H5A6B6C6D6E6F6G6H6A7B7C7D7E7F7G7H7A8B8C8D8E8F8G8H8";
+const std::string pieces = "PNBRQKpnbrqkGg";
+// const std::string squares = "A1B1C1D1E1F1G1H1A2B2C2D2E2F2G2H2A3B3C3D3E3F3G3H3A4B4C4D4E4F4G4H4A5B5C5D5E5F5G5H5A6B6C6D6E6F6G6H6A7B7C7D7E7F7G7H7A8B8C8D8E8F8G8H8";
+// const std::string squares = "A8B8C8D8E8F8G8H8A7B7C7D7E7F7G7H7A6B6C6D6E6F6G6H6A5B5C5D5E5F5G5H5A4B4C4D4E4F4G4H4A3B3C3D3E3F3G3H3A2B2C2D2E2F2G2H2A1B1C1D1E1F1G1H1";
+// --------------------------0-1-2-3-4-5-6-7-8-9-101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263
+const std::string squares = "a8b8c8d8e8f8g8h8a7b7c7d7e7f7g7h7a6b6c6d6e6f6g6h6a5b5c5d5e5f5g5h5a4b4c4d4e4f4g4h4a3b3c3d3e3f3g3h3a2b2c2d2e2f2g2h2a1b1c1d1e1f1g1h1";
 const std::string ranks = "12345678";
 const std::string files = "ABCDEFGH";
+const std::string startpos = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 const bitboard BITBOARD_MAX = UINT64_MAX;
 const flag BOARD_FLAG_MAX = 0b10111111;
 
