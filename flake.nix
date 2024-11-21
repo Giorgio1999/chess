@@ -21,6 +21,7 @@
             ];
             buildInputs = with pkgs; [
               gtest
+              gdb
             ];
 
             CXX_INCLUDE_PATH = "${pkgs.gcc-unwrapped}/include/c++/13.3.0/";

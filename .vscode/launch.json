@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch program",
+      "type": "gdb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build_debug/example_engine",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "stopOnEntry": true,
+      "loadAll": true,
+      "sourceFileMap": {
+        "/header": "${workspaceFolder}/header",
+        "/source": "${workspaceFolder}/source"
+      }
+    }
+  ]
+}
