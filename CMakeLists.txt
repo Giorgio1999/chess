@@ -44,3 +44,4 @@ configure_file(chessConfig.h.in chessConfig.h)
 add_subdirectory(tests)
 enable_testing()
 
+

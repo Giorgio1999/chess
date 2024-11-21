@@ -109,15 +109,26 @@ TEST (engine_handler_tests, engine_handler_position_moves_takes)
     EXPECT_EQ (request_string, expected_response);
 }
 
+TEST (engine_handler_tests, engine_handler_position_moves_castle)
+{
+    std::string response_string = Response ("position fen r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1 moves e1g1 e8g8\nshowboard\n");
+    std::string expected_response = "\nr----rk-\n--------\n--------\n--------\n--------\n--------\n--------\nR----RK-\nFlags:w-----\n\n";
+    EXPECT_EQ (response_string, expected_response);
+    response_string = Response ("position fen r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1 moves e1c1 e8c8\nshowboard\n");
+    expected_response = "\n--kr---r\n--------\n--------\n--------\n--------\n--------\n--------\n--KR---R\nFlags:w-----\n\n";
+    EXPECT_EQ (response_string, expected_response);
+}
+
 TEST (engine_handler_tests, engine_handler_position_speed)
 {
     auto now = std::chrono::high_resolution_clock::now ();
-    for (int i = 0; i < 1000; i++)
+    int npc = 1000;
+    for (int i = 0; i < npc; i++)
         {
-            std::string response_string = Response ("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves e2e4 e7e5 a1a8 h8h1\n");
+            std::string response_string = Response ("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\n");
         }
     auto end = std::chrono::high_resolution_clock::now ();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds> (end - now).count ();
-    std::cout << "1000 position calls in: " << duration << " ms / " << duration / 1000 << "pcs" << std::endl;
+    std::cout << (float)npc / duration << " ppms" << std::endl;
     EXPECT_GE (duration, 0);
 }

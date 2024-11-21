@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
+#include <chrono>
 #include "board.hpp"
 #include "Defs.hpp"
-
+#include "moves.hpp"
 TEST (board_tests, board_test_1)
 {
     chess::board::Board b;
@@ -74,3 +75,19 @@ TEST (board_tests, board_square2string_A8) { EXPECT_EQ (chess::board::square2str
 TEST (board_tests, board_square2string_H1) { EXPECT_EQ (chess::board::square2string (63), "h1"); }
 
 TEST (board_tests, board_square2string_A1) { EXPECT_EQ (chess::board::square2string (56), "a1"); }
+
+TEST (board_tests, board_makemove_speed)
+{
+    chess::board::Board b;
+    chess::consts::move m = chess::moves::string2move ("e8g1");
+    auto now = std::chrono::high_resolution_clock::now ();
+    int nmm = 1e5;
+    for (int i = 0; i < nmm; i++)
+        {
+            b.makeMove (123);
+        }
+    auto end = std::chrono::high_resolution_clock::now ();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (end - now).count ();
+    std::cout << (float)nmm / duration << " mpms" << std::endl;
+    EXPECT_GE (duration, 0);
+}

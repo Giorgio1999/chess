@@ -240,11 +240,37 @@ Board::makeMove (const consts::move move)
         {
             clear_castling (consts::castling_rights_name::CASTLE_k);
             clear_castling (consts::castling_rights_name::CASTLE_q);
+            if (startsquare == consts::Square::E8)
+                {
+                    if (endsquare == consts::Square::G8)
+                        {
+                            piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::H8;
+                            piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::F8;
+                        }
+                    if (endsquare == consts::Square::C8)
+                        {
+                            piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::A8;
+                            piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::D8;
+                        }
+                }
         }
     if (movepiece == consts::Piece::K)
         {
             clear_castling (consts::castling_rights_name::CASTLE_K);
             clear_castling (consts::castling_rights_name::CASTLE_Q);
+            if (startsquare == consts::Square::E1)
+                {
+                    if (endsquare == consts::Square::G1)
+                        {
+                            piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::H1;
+                            piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::F1;
+                        }
+                    if (endsquare == consts::Square::C1)
+                        {
+                            piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::A1;
+                            piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::D1;
+                        }
+                }
         }
     if (startsquare == consts::Square::H1 || endsquare == consts::Square::H1)
         {
@@ -264,6 +290,5 @@ Board::makeMove (const consts::move move)
         }
     flip_white_to_play ();
 }
-
 }
 }
