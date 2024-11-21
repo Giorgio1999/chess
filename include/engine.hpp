@@ -20,6 +20,7 @@ class Engine
     bool stop = false;
     bool ready = false;
     chess::board::Board board;
+    std::vector<chess::board::Board> gameHistory;
 
   public:
     Engine (std::string name, std::string author)
@@ -46,8 +47,16 @@ class Engine
     std::string
     MakeMove (consts::move move)
     {
+        gameHistory.push_back (board);
         board.makeMove (move);
         return "";
+    }
+
+    void
+    UndoMove ()
+    {
+        board = gameHistory.back ();
+        gameHistory.pop_back ();
     }
 
     std::string

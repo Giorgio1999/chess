@@ -17,7 +17,7 @@ namespace consts
 typedef std::function<std::string (chess::engine::Engine &, std::string)> Command;
 typedef uint64_t bitboard;
 typedef uint8_t flag;
-typedef uint16_t move;
+typedef uint32_t move;
 
 const std::string release = "release";
 const std::string debug = "debug";

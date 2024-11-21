@@ -189,6 +189,7 @@ Board::set_piece (const int square, const consts::Piece _piece)
 void
 Board::makeMove (const consts::move move)
 {
+
     int startsquare = moves::getStartSquare (move);
     consts::bitboard from = (consts::bitboard)1 << startsquare;
     consts::Piece movepiece = consts::Piece::empty;
@@ -213,62 +214,86 @@ Board::makeMove (const consts::move move)
                     break;
                 }
         }
-    piece_boards[movepiece] ^= from;
-    piece_boards[movepiece] ^= to;
-    if (takepiece != consts::Piece::empty)
+    int promotion;
+    if (moves::getPromotion (move, promotion))
         {
-            piece_boards[takepiece] ^= to;
-        }
-    ghost_board = 0;
-    clear_enpassantable ();
-    if (movepiece == consts::Piece::P || movepiece == consts::Piece::p)
-        {
-            if (std::abs (startsquare - endsquare) == 16)
+            if (white_to_play ())
                 {
-                    set_enpassantable ();
-                    if (white_to_play ())
+                    piece_boards[consts::Piece::P] ^= from;
+                    piece_boards[promotion - 6] ^= to;
+                }
+            else
+                {
+                    piece_boards[consts::Piece::p] ^= from;
+                    piece_boards[promotion] ^= to;
+                }
+
+            if (takepiece != consts::Piece::empty)
+                {
+                    piece_boards[takepiece] ^= to;
+                }
+            ghost_board = 0;
+            clear_enpassantable ();
+        }
+    else
+        {
+            piece_boards[movepiece] ^= from;
+            piece_boards[movepiece] ^= to;
+            if (takepiece != consts::Piece::empty)
+                {
+                    piece_boards[takepiece] ^= to;
+                }
+            ghost_board = 0;
+            clear_enpassantable ();
+            if (movepiece == consts::Piece::P || movepiece == consts::Piece::p)
+                {
+                    if (std::abs (startsquare - endsquare) == 16)
                         {
-                            ghost_board ^= to << 8;
-                        }
-                    else
-                        {
-                            ghost_board ^= to >> 8;
+                            set_enpassantable ();
+                            if (white_to_play ())
+                                {
+                                    ghost_board ^= to << 8;
+                                }
+                            else
+                                {
+                                    ghost_board ^= to >> 8;
+                                }
                         }
                 }
-        }
-    if (movepiece == consts::Piece::k)
-        {
-            clear_castling (consts::castling_rights_name::CASTLE_k);
-            clear_castling (consts::castling_rights_name::CASTLE_q);
-            if (startsquare == consts::Square::E8)
+            if (movepiece == consts::Piece::k)
                 {
-                    if (endsquare == consts::Square::G8)
+                    clear_castling (consts::castling_rights_name::CASTLE_k);
+                    clear_castling (consts::castling_rights_name::CASTLE_q);
+                    if (startsquare == consts::Square::E8)
                         {
-                            piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::H8;
-                            piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::F8;
-                        }
-                    if (endsquare == consts::Square::C8)
-                        {
-                            piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::A8;
-                            piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::D8;
+                            if (endsquare == consts::Square::G8)
+                                {
+                                    piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::H8;
+                                    piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::F8;
+                                }
+                            if (endsquare == consts::Square::C8)
+                                {
+                                    piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::A8;
+                                    piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::D8;
+                                }
                         }
                 }
-        }
-    if (movepiece == consts::Piece::K)
-        {
-            clear_castling (consts::castling_rights_name::CASTLE_K);
-            clear_castling (consts::castling_rights_name::CASTLE_Q);
-            if (startsquare == consts::Square::E1)
+            if (movepiece == consts::Piece::K)
                 {
-                    if (endsquare == consts::Square::G1)
+                    clear_castling (consts::castling_rights_name::CASTLE_K);
+                    clear_castling (consts::castling_rights_name::CASTLE_Q);
+                    if (startsquare == consts::Square::E1)
                         {
-                            piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::H1;
-                            piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::F1;
-                        }
-                    if (endsquare == consts::Square::C1)
-                        {
-                            piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::A1;
-                            piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::D1;
+                            if (endsquare == consts::Square::G1)
+                                {
+                                    piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::H1;
+                                    piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::F1;
+                                }
+                            if (endsquare == consts::Square::C1)
+                                {
+                                    piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::A1;
+                                    piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::D1;
+                                }
                         }
                 }
         }
