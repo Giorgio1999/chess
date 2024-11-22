@@ -8,6 +8,7 @@ namespace bitboard_helper
 {
 int pop_lsb (consts::bitboard &b);
 void flip_bit (consts::bitboard &b, const int square);
+std::string visualize_bitboard (chess::consts::bitboard b);
 }
 }
 

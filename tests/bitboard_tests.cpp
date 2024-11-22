@@ -48,3 +48,15 @@ TEST (bitboard_tests, bitboard_test_speed)
     std::cout << "Elapsed time: " << elapsed_seconds.count () << "s\n";
     EXPECT_LT (elapsed_seconds.count (), 1e-5);
 }
+
+TEST (bitboard_tests, bitboard_test_visualize)
+{
+    chess::consts::bitboard board = chess::consts::BITBOARD_MAX;
+    std::string bitboardstring = chess::bitboard_helper::visualize_bitboard (board);
+    std::string expectedstring = "oooooooo\noooooooo\noooooooo\noooooooo\noooooooo\noooooooo\noooooooo\noooooooo\n";
+    EXPECT_EQ (bitboardstring, expectedstring);
+    board = (chess::consts::bitboard)1;
+    bitboardstring = chess::bitboard_helper::visualize_bitboard (board);
+    expectedstring = "o-------\n--------\n--------\n--------\n--------\n--------\n--------\n--------\n";
+    EXPECT_EQ (bitboardstring, expectedstring);
+}

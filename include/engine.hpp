@@ -3,6 +3,7 @@
 #include <string>
 #include <functional>
 #include "board.hpp"
+#include "moveGenerator.hpp"
 
 namespace chess
 {
@@ -21,6 +22,7 @@ class Engine
     bool ready = false;
     chess::board::Board board;
     std::vector<chess::board::Board> gameHistory;
+    chess::movegenerator::MoveGenerator moveGenerator;
 
   public:
     Engine (std::string name, std::string author)
@@ -33,6 +35,9 @@ class Engine
     std::string Introduce ();
     void Stop ();
     void UnStop ();
+    chess::consts::bitboard Perft (int depth);
+    std::string SplitPerft (int depth);
+    std::string LegalMoves ();
     std::string
     Search ()
     {
@@ -134,6 +139,11 @@ class Engine
     SetReady (bool _ready)
     {
         ready = _ready;
+    }
+    chess::board::Board
+    GetBoard ()
+    {
+        return board;
     }
 };
 

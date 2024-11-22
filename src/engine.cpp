@@ -2,6 +2,7 @@
 #include "Defs.hpp"
 #include "chessConfig.h"
 #include "fen.hpp"
+#include "moves.hpp"
 #include <string>
 #include <mutex>
 
@@ -38,6 +39,45 @@ Engine::Position (std::string _position)
 {
     fen::parse (_position, board);
     return "";
+}
+chess::consts::bitboard
+Engine::Perft (int depth)
+{
+    std::vector<chess::consts::move> legalMoves = moveGenerator.GetLegalMoves (*this);
+    if (depth == 0)
+        {
+            return 1;
+        }
+    consts::bitboard numberofleafs = 0;
+    for (chess::consts::move move : legalMoves)
+        {
+            std::string dum = MakeMove (move);
+            numberofleafs += Perft (depth - 1);
+            UndoMove ();
+        }
+    return numberofleafs;
+}
+std::string
+Engine::SplitPerft (int depth)
+{
+    std::vector<chess::consts::move> legalMoves = moveGenerator.GetLegalMoves (*this);
+    std::string res;
+    for (chess::consts::move move : legalMoves)
+        {
+            res += chess::moves::move2string (move) + std::to_string (Perft (depth - 1)) + "\n";
+        }
+    return res;
+}
+std::string
+Engine::LegalMoves ()
+{
+    std::vector<chess::consts::move> legalMoves = moveGenerator.GetLegalMoves (*this);
+    std::string res;
+    for (chess::consts::move move : legalMoves)
+        {
+            res += chess::moves::move2string (move) + "\n";
+        }
+    return res;
 }
 }
 }

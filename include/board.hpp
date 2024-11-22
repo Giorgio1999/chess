@@ -20,6 +20,7 @@ class Board
 {
   private:
     std::array<consts::bitboard, 12> piece_boards;
+    std::array<consts::bitboard, 2> color_boards;
     consts::bitboard ghost_board = 0;
     consts::flag board_flag = 0;
 
@@ -38,6 +39,17 @@ class Board
     void flip_ghost_board (const int square);
     void set_piece (const int square, const consts::Piece _piece);
     void makeMove (const consts::move move);
+    void init_color_boards ();
+    std::array<consts::bitboard, 12>
+    get_piece_boards ()
+    {
+        return piece_boards;
+    }
+    std::array<consts::bitboard, 2>
+    get_color_boards ()
+    {
+        return color_boards;
+    }
 };
 std::string square2string (const int square);
 int string2square (const std::string string);

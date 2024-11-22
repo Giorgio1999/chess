@@ -93,6 +93,7 @@ parse (const std::string &fen, board::Board &board)
             board.set_enpassantable ();
             board.flip_ghost_board (board::string2square (en_passant));
         }
+    board.init_color_boards ();
 }
 std::string
 generate (const board::Board &board)

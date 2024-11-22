@@ -28,6 +28,7 @@ Board::init ()
         }
     ghost_board = 0;
     board_flag = 0;
+    color_boards = { 0, 0 };
 }
 
 bool
@@ -158,6 +159,16 @@ Board::flip_ghost_board (const int square)
     bitboard_helper::flip_bit (ghost_board, square);
 }
 
+void
+Board::init_color_boards ()
+{
+    for (uint i = 0; i < 6; i++)
+        {
+            color_boards[0] |= piece_boards[i];
+            color_boards[1] |= piece_boards[i + 6];
+        }
+}
+
 std::string
 square2string (const int square)
 {
@@ -221,16 +232,21 @@ Board::makeMove (const consts::move move)
                 {
                     piece_boards[consts::Piece::P] ^= from;
                     piece_boards[promotion - 6] ^= to;
+                    color_boards[0] ^= from;
+                    color_boards[0] ^= to;
                 }
             else
                 {
                     piece_boards[consts::Piece::p] ^= from;
                     piece_boards[promotion] ^= to;
+                    color_boards[1] ^= from;
+                    color_boards[1] ^= to;
                 }
 
             if (takepiece != consts::Piece::empty)
                 {
                     piece_boards[takepiece] ^= to;
+                    color_boards[!white_to_play ()] ^= to;
                 }
             ghost_board = 0;
             clear_enpassantable ();
@@ -239,9 +255,12 @@ Board::makeMove (const consts::move move)
         {
             piece_boards[movepiece] ^= from;
             piece_boards[movepiece] ^= to;
+            color_boards[!white_to_play ()] ^= from;
+            color_boards[!white_to_play ()] ^= to;
             if (takepiece != consts::Piece::empty)
                 {
                     piece_boards[takepiece] ^= to;
+                    color_boards[!white_to_play ()] ^= to;
                 }
             ghost_board = 0;
             clear_enpassantable ();
@@ -270,11 +289,15 @@ Board::makeMove (const consts::move move)
                                 {
                                     piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::H8;
                                     piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::F8;
+                                    color_boards[1] ^= (consts::bitboard)1 << consts::Square::H8;
+                                    color_boards[1] ^= (consts::bitboard)1 << consts::Square::F8;
                                 }
                             if (endsquare == consts::Square::C8)
                                 {
                                     piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::A8;
                                     piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::D8;
+                                    color_boards[1] ^= (consts::bitboard)1 << consts::Square::A8;
+                                    color_boards[1] ^= (consts::bitboard)1 << consts::Square::D8;
                                 }
                         }
                 }
@@ -288,11 +311,15 @@ Board::makeMove (const consts::move move)
                                 {
                                     piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::H1;
                                     piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::F1;
+                                    color_boards[0] ^= (consts::bitboard)1 << consts::Square::H1;
+                                    color_boards[0] ^= (consts::bitboard)1 << consts::Square::F1;
                                 }
                             if (endsquare == consts::Square::C1)
                                 {
                                     piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::A1;
                                     piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::D1;
+                                    color_boards[0] ^= (consts::bitboard)1 << consts::Square::A1;
+                                    color_boards[0] ^= (consts::bitboard)1 << consts::Square::D1;
                                 }
                         }
                 }

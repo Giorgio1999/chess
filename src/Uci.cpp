@@ -156,6 +156,32 @@ position (chess::engine::Engine &engine, std::string _command)
     return "";
 }
 
+std::string
+perft (chess::engine::Engine &engine, std::string _command)
+{
+    std::regex re ("([0-9]+)");
+    std::sregex_iterator it (_command.begin (), _command.end (), re);
+    std::string command = it->str ();
+    int depth = std::stoi (command);
+    return std::to_string (engine.Perft (depth));
+}
+
+std::string
+splitperft (chess::engine::Engine &engine, std::string _command)
+{
+    std::regex re ("([0-9]+)");
+    std::sregex_iterator it (_command.begin (), _command.end (), re);
+    std::string command = it->str ();
+    int depth = std::stoi (command);
+    return engine.SplitPerft (depth);
+}
+
+std::string
+legalmoves (chess::engine::Engine &engine, std::string _command)
+{
+    return engine.LegalMoves ();
+}
+
 void
 Split (std::string &command, std::vector<std::string> &args)
 {
@@ -183,6 +209,9 @@ Uci::Uci ()
     commands["go"] = go;
     commands["showboard"] = showboard;
     commands["position"] = position;
+    commands["perft"] = perft;
+    commands["splitperft"] = splitperft;
+    commands["legalmoves"] = legalmoves;
 }
 consts::Command
 Uci::operator[] (std::string _command)
