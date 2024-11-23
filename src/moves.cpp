@@ -60,6 +60,11 @@ std::string
 move2string (consts::move move)
 {
     std::string movestring = board::square2string (getStartSquare (move)) + board::square2string (getEndSquare (move));
+    int promotion;
+    if (chess::moves::getPromotion (move, promotion))
+        {
+            movestring += chess::consts::pieces.at (promotion);
+        }
     return movestring;
 }
 }

@@ -50,6 +50,11 @@ class Board
     {
         return color_boards;
     }
+    chess::consts::bitboard
+    get_ghost_board ()
+    {
+        return ghost_board;
+    }
 };
 std::string square2string (const int square);
 int string2square (const std::string string);

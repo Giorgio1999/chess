@@ -13,8 +13,12 @@ class MoveGenerator
   private:
     std::array<chess::consts::bitboard, 8> fileMasks;
     std::array<chess::consts::bitboard, 8> rankMasks;
+    std::array<chess::consts::bitboard, 8> n_fileMasks;
+    std::array<chess::consts::bitboard, 8> n_rankMasks;
+    std::array<chess::consts::bitboard, 64> knightMoves;
 
     void initMasks ();
+    void initKnightMoves ();
 
   public:
     MoveGenerator ();

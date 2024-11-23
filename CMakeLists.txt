@@ -17,7 +17,7 @@ target_compile_options(
           -Wno-unused
           -fno-inline
           $<$<CONFIG:Debug>:-g>
-          $<$<CONFIG:Release>:-O3
+          $<$<CONFIG:Release>:-Ofast
           -DNDEBUG>)
 
 add_executable(example_program examples/example_program.cpp)
@@ -33,7 +33,7 @@ target_compile_options(
           -Wno-unused
           -fno-inline
           $<$<CONFIG:Debug>:-g>
-          $<$<CONFIG:Release>:-O3
+          $<$<CONFIG:Release>:-Ofast
           -DNDEBUG>)
 
 add_executable(example_engine examples/example_engine.cpp)
@@ -49,7 +49,7 @@ target_compile_options(
           -Wno-unused
           -fno-inline
           $<$<CONFIG:Debug>:-g>
-          $<$<CONFIG:Release>:-O3
+          $<$<CONFIG:Release>:-Ofast
           -DNDEBUG>)
 
 install(
