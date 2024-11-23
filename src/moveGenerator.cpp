@@ -8,6 +8,7 @@ chess::movegenerator::MoveGenerator::MoveGenerator ()
 {
     initMasks ();
     initKnightMoves ();
+    initKingMoves ();
 }
 
 std::vector<chess::consts::move>
@@ -124,6 +125,19 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
                 }
         }
 
+    // Kings
+    chess::consts::bitboard kingBoard = pieceBoards[5 + colorOffset];
+    while (kingBoard > 0)
+        {
+            uint from = chess::bitboard_helper::pop_lsb (kingBoard);
+            chess::consts::bitboard moves = kingMoves[from] & n_myColorBoard;
+            while (moves > 0)
+                {
+                    uint to = chess::bitboard_helper::pop_lsb (moves);
+                    legalMoves.push_back (chess::moves::move_ (from, to));
+                }
+        }
+
     return legalMoves;
 }
 
@@ -166,5 +180,29 @@ chess::movegenerator::MoveGenerator::initKnightMoves ()
             chess::consts::bitboard west_north = (knightPosition & west_north_mask) >> 10;
             chess::consts::bitboard north_west = (knightPosition & north_west_mask) >> 17;
             knightMoves[i] = north_east | east_north | east_south | south_east | south_west | west_south | west_north | north_west;
+        }
+}
+
+void
+chess::movegenerator::MoveGenerator::initKingMoves ()
+{
+    chess::consts::bitboard kingPosition = (chess::consts::bitboard)0;
+    chess::consts::bitboard north_mask = ~rankMasks[7];
+    chess::consts::bitboard east_mask = ~fileMasks[7];
+    chess::consts::bitboard south_mask = ~rankMasks[0];
+    chess::consts::bitboard west_mask = ~fileMasks[0];
+    std::cout << chess::bitboard_helper::visualize_bitboard (north_mask) << std::endl;
+    for (uint i = 0; i < 64; i++)
+        {
+            kingPosition = (chess::consts::bitboard)1 << i;
+            chess::consts::bitboard north = (kingPosition & north_mask) >> 8;
+            chess::consts::bitboard north_east = ((kingPosition & north_mask) & east_mask) >> 7;
+            chess::consts::bitboard east = (kingPosition & east_mask) << 1;
+            chess::consts::bitboard south_east = ((kingPosition & south_mask) & east_mask) << 9;
+            chess::consts::bitboard south = (kingPosition & south_mask) << 8;
+            chess::consts::bitboard south_west = ((kingPosition & south_mask) & west_mask) << 7;
+            chess::consts::bitboard west = (kingPosition & west_mask) >> 1;
+            chess::consts::bitboard north_west = ((kingPosition & north_mask) & west_mask) >> 9;
+            kingMoves[i] = north | north_east | east | south_east | south | south_west | west | north_west;
         }
 }

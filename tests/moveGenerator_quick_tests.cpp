@@ -53,3 +53,19 @@ TEST (moveGenerator_tests, knight_test)
     res = engine.Perft (1);
     EXPECT_EQ (perftresults, res);
 }
+
+TEST (moveGenerator_tests, king_test)
+{
+    chess::engine::Engine engine ("test_engine", "test_author");
+    std::string kingmoves_fen = "K6K/8/2P5/3K4/4p3/8/8/K6K w - - 0 1";
+    chess::consts::bitboard perftresults = 4 * 3 + 8 - 1 + 1;
+    engine.Position (kingmoves_fen);
+    std::cout << kingmoves_fen << std::endl << engine.LegalMoves () << std::endl;
+    chess::consts::bitboard res = engine.Perft (1);
+    EXPECT_EQ (perftresults, res);
+    kingmoves_fen = "k6k/8/2P5/3k4/4p3/8/8/k6k b - - 0 1";
+    engine.Position (kingmoves_fen);
+    res = engine.Perft (1);
+    std::cout << kingmoves_fen << std::endl << engine.LegalMoves () << std::endl;
+    EXPECT_EQ (perftresults, res);
+}
