@@ -226,6 +226,7 @@ Board::makeMove (const consts::move move)
                 }
         }
     int promotion;
+    int ghostsquare;
     if (moves::getPromotion (move, promotion))
         {
             if (white_to_play ())
@@ -246,7 +247,30 @@ Board::makeMove (const consts::move move)
             if (takepiece != consts::Piece::empty)
                 {
                     piece_boards[takepiece] ^= to;
-                    color_boards[!white_to_play ()] ^= to;
+                    color_boards[white_to_play ()] ^= to;
+                }
+            ghost_board = 0;
+            clear_enpassantable ();
+        }
+    else if (moves::getEnpassant (move, ghostsquare))
+        {
+            if (white_to_play ())
+                {
+                    piece_boards[consts::Piece::P] ^= from;
+                    piece_boards[consts::Piece::P] ^= to;
+                    piece_boards[consts::Piece::p] ^= (chess::consts::bitboard)1 << ghostsquare;
+                    color_boards[0] ^= from;
+                    color_boards[0] ^= to;
+                    color_boards[1] ^= (chess::consts::bitboard)1 << ghostsquare;
+                }
+            else
+                {
+                    piece_boards[consts::Piece::p] ^= from;
+                    piece_boards[consts::Piece::p] ^= to;
+                    piece_boards[consts::Piece::P] ^= (chess::consts::bitboard)1 << ghostsquare;
+                    color_boards[1] ^= from;
+                    color_boards[1] ^= to;
+                    color_boards[0] ^= (chess::consts::bitboard)1 << ghostsquare;
                 }
             ghost_board = 0;
             clear_enpassantable ();
@@ -260,7 +284,7 @@ Board::makeMove (const consts::move move)
             if (takepiece != consts::Piece::empty)
                 {
                     piece_boards[takepiece] ^= to;
-                    color_boards[!white_to_play ()] ^= to;
+                    color_boards[white_to_play ()] ^= to;
                 }
             ghost_board = 0;
             clear_enpassantable ();

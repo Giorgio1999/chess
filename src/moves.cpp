@@ -26,6 +26,13 @@ getPromotion (consts::move move, int &promotion)
     return move & ((consts::move)1 << 31);
 }
 
+bool
+getEnpassant (consts::move move, int &takesquare)
+{
+    takesquare = (move >> 16) & 0b11111111;
+    return move & ((consts::move)1 << 30);
+}
+
 consts::move
 move_ (int startsquare, int endsquare)
 {
@@ -36,6 +43,12 @@ consts::move
 move_ (int startsquare, int endsquare, int promotion)
 {
     return ((consts::move)1 << 31) | (promotion << 16) | (startsquare << 8) | endsquare;
+}
+
+consts::move
+move_ (int startsquare, int endsquare, int ghostsquare, bool dum)
+{
+    return ((consts::move)1 << 30) | (ghostsquare << 16) | (startsquare << 8) | endsquare;
 }
 
 consts::move

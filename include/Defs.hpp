@@ -29,6 +29,7 @@ const std::string squares = "a8b8c8d8e8f8g8h8a7b7c7d7e7f7g7h7a6b6c6d6e6f6g6h6a5b
 const std::string ranks = "12345678";
 const std::string files = "ABCDEFGH";
 const std::string startpos = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+const std::string kiwipete = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
 const bitboard BITBOARD_MAX = UINT64_MAX;
 const flag BOARD_FLAG_MAX = 0b10111111;
 

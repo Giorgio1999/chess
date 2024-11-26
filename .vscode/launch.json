@@ -9,11 +9,7 @@
       "args": [],
       "cwd": "${workspaceFolder}",
       "stopOnEntry": true,
-      "loadAll": true,
-      "sourceFileMap": {
-        "/header": "${workspaceFolder}/header",
-        "/source": "${workspaceFolder}/source"
-      }
+      "loadAll": true
     }
   ]
 }

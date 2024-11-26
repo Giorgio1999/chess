@@ -10,8 +10,10 @@ namespace moves
 int getStartSquare (consts::move);
 int getEndSquare (consts::move);
 bool getPromotion (consts::move, int &promotion);
+bool getEnpassant (consts::move, int &ghostsquare);
 consts::move move_ (int startsquare, int endsquare);
 consts::move move_ (int startsquare, int endsquare, int promotion);
+consts::move move_ (int startsquare, int endsquare, int ghostsquare, bool dum);
 consts::move string2move (std::string);
 std::string move2string (consts::move);
 

@@ -70,19 +70,19 @@ parse (const std::string &fen, board::Board &board)
         {
             if (castling.find ('K') != std::string::npos)
                 {
-                    board.flip_castling (consts::castling_rights_name::CASTLE_k);
+                    board.flip_castling (consts::castling_rights_name::CASTLE_K);
                 }
             if (castling.find ('Q') != std::string::npos)
                 {
-                    board.flip_castling (consts::castling_rights_name::CASTLE_q);
+                    board.flip_castling (consts::castling_rights_name::CASTLE_Q);
                 }
             if (castling.find ('k') != std::string::npos)
                 {
-                    board.flip_castling (consts::castling_rights_name::CASTLE_K);
+                    board.flip_castling (consts::castling_rights_name::CASTLE_k);
                 }
             if (castling.find ('q') != std::string::npos)
                 {
-                    board.flip_castling (consts::castling_rights_name::CASTLE_Q);
+                    board.flip_castling (consts::castling_rights_name::CASTLE_q);
                 }
         }
 

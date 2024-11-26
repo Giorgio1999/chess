@@ -48,6 +48,10 @@ Engine::Perft (int depth)
         {
             return 1;
         }
+    if (depth == 1)
+        {
+            return legalMoves.size ();
+        }
     consts::bitboard numberofleafs = 0;
     for (chess::consts::move move : legalMoves)
         {
@@ -64,7 +68,9 @@ Engine::SplitPerft (int depth)
     std::string res;
     for (chess::consts::move move : legalMoves)
         {
-            res += chess::moves::move2string (move) + std::to_string (Perft (depth - 1)) + "\n";
+            MakeMove (move);
+            res += chess::moves::move2string (move) + " " + std::to_string (Perft (depth - 1)) + "\n";
+            UndoMove ();
         }
     return res;
 }
