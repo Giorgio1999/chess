@@ -134,6 +134,18 @@ enum Square
     H1
 };
 
+static std::unordered_map<std::string, std::vector<chess::consts::bitboard> >
+getTestSuite ()
+{
+    std::unordered_map<std::string, std::vector<chess::consts::bitboard> > testsuite;
+    testsuite[chess::consts::startpos] = { 1, 20, 400, 8902, 197281, 4865609 };
+    testsuite[chess::consts::kiwipete] = { 1, 48, 2039, 97862, 4085603 };
+    testsuite["8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - -"] = { 1, 14, 191, 2812, 43238, 674624, 11030083 };
+    testsuite["r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"] = { 1, 6, 264, 9467, 422333, 15833292 };
+    testsuite["rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8"] = { 1, 44, 1486, 62379, 2103487 };
+    return testsuite;
+}
+
 }
 }
 #ifdef NDEBUG

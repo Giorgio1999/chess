@@ -366,5 +366,37 @@ Board::makeMove (const consts::move move)
         }
     flip_white_to_play ();
 }
+void
+Board::sanitize (consts::move &move)
+{
+    int dum;
+    if (!chess::moves::getPromotion (move, dum))
+        {
+            uint startsquare = chess::moves::getStartSquare (move);
+            uint endsquare = chess::moves::getEndSquare (move);
+            chess::consts::bitboard from = (chess::consts::bitboard)1 << startsquare;
+            chess::consts::bitboard to = (chess::consts::bitboard)1 << endsquare;
+            consts::Piece movepiece = consts::Piece::empty;
+            for (int i = 0; i < 12; i++)
+                {
+                    consts::bitboard tmp_board = piece_boards[i] & from;
+                    if (tmp_board > 0)
+                        {
+                            movepiece = (consts::Piece)i;
+                            break;
+                        }
+                }
+            uint pawnindex = white_to_play () ? 0 : 6;
+            if (movepiece == chess::consts::Piece::P || movepiece == chess::consts::Piece::p)
+                {
+                    chess::consts::bitboard ghostcopy = ghost_board;
+                    bool enpassant = ((piece_boards[pawnindex] & from) > 0) && ((ghostcopy & to) > 0);
+                    if (enpassant)
+                        {
+                            move = chess::moves::move_ (startsquare, endsquare, chess::bitboard_helper::pop_lsb (ghostcopy), true);
+                        }
+                }
+        }
+}
 }
 }

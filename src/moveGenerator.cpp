@@ -121,18 +121,20 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
                     pseudo_legalMoves.push_back (chess::moves::move_ (from, to, piece));
                 }
         }
+    chess::consts::bitboard ghostcopy = ghostboard;
     while (captures_right_enp > 0)
         {
             uint to = chess::bitboard_helper::pop_lsb (captures_right_enp);
             uint from = to + from_right_offset;
-            int ghostsquare = chess::bitboard_helper::pop_lsb (ghostboard);
+            int ghostsquare = chess::bitboard_helper::pop_lsb (ghostcopy);
             pseudo_legalMoves.push_back (chess::moves::move_ (from, to, ghostsquare, true));
         }
+    ghostcopy = ghostboard;
     while (captures_left_enp > 0)
         {
             uint to = chess::bitboard_helper::pop_lsb (captures_left_enp);
             uint from = to + from_left_offset;
-            int ghostsquare = chess::bitboard_helper::pop_lsb (ghostboard);
+            int ghostsquare = chess::bitboard_helper::pop_lsb (ghostcopy);
             pseudo_legalMoves.push_back (chess::moves::move_ (from, to, ghostsquare, true));
         }
 
@@ -283,17 +285,17 @@ chess::movegenerator::MoveGenerator::GetAttacks (chess::engine::Engine &engine, 
 
     if (white_to_play)
         {
-            captures_right = ((n_promo_rank_occ & n_fileMasks[7]) >> 7) & (colorBoards[1] | ghostboard);
-            captures_left = ((n_promo_rank_occ & n_fileMasks[0]) >> 9) & (colorBoards[1] | ghostboard);
-            captures_promotions_right = ((promo_rank_occ & n_fileMasks[7]) >> 7) & colorBoards[1];
-            captures_promotions_left = ((promo_rank_occ & n_fileMasks[0]) >> 9) & colorBoards[1];
+            captures_right = ((n_promo_rank_occ & n_fileMasks[7]) >> 7);
+            captures_left = ((n_promo_rank_occ & n_fileMasks[0]) >> 9);
+            captures_promotions_right = ((promo_rank_occ & n_fileMasks[7]) >> 7);
+            captures_promotions_left = ((promo_rank_occ & n_fileMasks[0]) >> 9);
         }
     else
         {
-            captures_right = ((n_promo_rank_occ & n_fileMasks[7]) << 9) & (colorBoards[0] | ghostboard);
-            captures_left = ((n_promo_rank_occ & n_fileMasks[0]) << 7) & (colorBoards[0] | ghostboard);
-            captures_promotions_right = ((promo_rank_occ & n_fileMasks[7]) << 9) & colorBoards[0];
-            captures_promotions_left = ((promo_rank_occ & n_fileMasks[0]) << 7) & colorBoards[0];
+            captures_right = ((n_promo_rank_occ & n_fileMasks[7]) << 9);
+            captures_left = ((n_promo_rank_occ & n_fileMasks[0]) << 7);
+            captures_promotions_right = ((promo_rank_occ & n_fileMasks[7]) << 9);
+            captures_promotions_left = ((promo_rank_occ & n_fileMasks[0]) << 7);
         }
     attacks |= captures_right;
     attacks |= captures_left;

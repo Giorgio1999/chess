@@ -39,6 +39,7 @@ class Board
     void flip_ghost_board (const int square);
     void set_piece (const int square, const consts::Piece _piece);
     void makeMove (const consts::move move);
+    void sanitize (consts::move &move);
     void init_color_boards ();
     std::array<consts::bitboard, 12>
     get_piece_boards ()

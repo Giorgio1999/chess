@@ -56,6 +56,15 @@ class Engine
         board.makeMove (move);
         return "";
     }
+    std::string
+    MakeSanitaryMove (consts::move move)
+    {
+        gameHistory.push_back (board);
+        board.sanitize (move);
+        board.makeMove (move);
+        return "";
+    }
+    std::string Bench ();
 
     void
     UndoMove ()

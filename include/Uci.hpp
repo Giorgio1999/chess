@@ -34,6 +34,7 @@ std::string position (chess::engine::Engine &engine, std::string _command);
 std::string perft (chess::engine::Engine &engine, std::string _command);
 std::string splitperft (chess::engine::Engine &engine, std::string _command);
 std::string legalmoves (chess::engine::Engine &engine, std::string _command);
+std::string bench (chess::engine::Engine &engine, std::string _command);
 
 void Split (std::string &command, std::vector<std::string> &args);
 

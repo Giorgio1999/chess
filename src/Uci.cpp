@@ -145,7 +145,7 @@ position (chess::engine::Engine &engine, std::string _command)
                         {
                             CERR << "Move: " << args[i] << " " << chess::moves::string2move (args[i]) << std::endl;
                             chess::consts::move move = chess::moves::string2move (args[i]);
-                            std::string dum = engine.MakeMove (move);
+                            std::string dum = engine.MakeSanitaryMove (move);
                         }
                 }
             else
@@ -182,6 +182,12 @@ legalmoves (chess::engine::Engine &engine, std::string _command)
     return engine.LegalMoves ();
 }
 
+std::string
+bench (chess::engine::Engine &engine, std::string _command)
+{
+    return engine.Bench ();
+}
+
 void
 Split (std::string &command, std::vector<std::string> &args)
 {
@@ -212,6 +218,7 @@ Uci::Uci ()
     commands["perft"] = perft;
     commands["splitperft"] = splitperft;
     commands["legalmoves"] = legalmoves;
+    commands["bench"] = bench;
 }
 consts::Command
 Uci::operator[] (std::string _command)

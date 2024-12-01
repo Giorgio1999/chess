@@ -5,6 +5,7 @@
 #include "moves.hpp"
 #include <string>
 #include <mutex>
+#include <chrono>
 
 std::mutex stop_mutex;
 
@@ -84,6 +85,26 @@ Engine::LegalMoves ()
             res += chess::moves::move2string (move) + "\n";
         }
     return res;
+}
+std::string
+Engine::Bench ()
+{
+    std::unordered_map<std::string, std::vector<chess::consts::bitboard> > testsuite = chess::consts::getTestSuite ();
+    auto start = std::chrono::high_resolution_clock::now ();
+    uint64_t leafs = 0;
+    for (std::pair<std::string, std::vector<chess::consts::bitboard> > point : testsuite)
+        {
+            std::string position = point.first;
+            std::vector<chess::consts::bitboard> data = point.second;
+            for (uint i = 0; i < data.size (); i++)
+                {
+                    Position (position);
+                    leafs += Perft (i);
+                }
+        }
+    auto end = std::chrono::high_resolution_clock::now ();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (end - start).count ();
+    return std::to_string (((float)leafs / duration) / 1e6 * 1e3) + "\n";
 }
 }
 }

@@ -205,3 +205,34 @@ TEST (moveGenerator_tests, wrong_pos_2_test)
     chess::consts::bitboard res = engine.Perft (1);
     EXPECT_EQ (perftresults, res);
 }
+
+TEST (moveGenerator_tests, wrong_pos_3_test)
+{
+    chess::engine::Engine engine ("test_engine", "test_author");
+    std::string fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
+    engine.Position (fen);
+    engine.MakeSanitaryMove (chess::moves::string2move ("c4c5"));
+    engine.MakeSanitaryMove (chess::moves::string2move ("c7c6"));
+    engine.MakeSanitaryMove (chess::moves::string2move ("e4e5"));
+    engine.MakeSanitaryMove (chess::moves::string2move ("d7d5"));
+    chess::consts::bitboard perftresults = 1655;
+    std::cout << fen << std::endl << engine.LegalMoves () << std::endl;
+    chess::consts::bitboard res = engine.Perft (2);
+    EXPECT_EQ (perftresults, res);
+}
+
+TEST (moveGenerator_tests, wrong_pos_4_test)
+{
+    chess::engine::Engine engine ("test_engine", "test_author");
+    std::string fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
+    engine.Position (fen);
+    engine.MakeSanitaryMove (chess::moves::string2move ("c4c5"));
+    engine.MakeSanitaryMove (chess::moves::string2move ("c7c6"));
+    engine.MakeSanitaryMove (chess::moves::string2move ("b5c6"));
+    engine.MakeSanitaryMove (chess::moves::string2move ("f6g8"));
+    engine.MakeSanitaryMove (chess::moves::string2move ("c6c7"));
+    chess::consts::bitboard perftresults = 37;
+    std::cout << fen << std::endl << engine.LegalMoves () << std::endl;
+    chess::consts::bitboard res = engine.Perft (1);
+    EXPECT_EQ (perftresults, res);
+}

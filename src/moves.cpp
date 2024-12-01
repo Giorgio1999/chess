@@ -23,14 +23,14 @@ bool
 getPromotion (consts::move move, int &promotion)
 {
     promotion = (move >> 16) & 0b11111111;
-    return move & ((consts::move)1 << 31);
+    return (move & ((consts::move)1 << 31)) > 0;
 }
 
 bool
 getEnpassant (consts::move move, int &takesquare)
 {
     takesquare = (move >> 16) & 0b11111111;
-    return move & ((consts::move)1 << 30);
+    return (move & ((consts::move)1 << 30)) > 0;
 }
 
 consts::move
