@@ -6,6 +6,10 @@
 #include "engine_handler.hpp"
 #include "board.hpp"
 #include "Defs.hpp"
+#include "bitboard.hpp"
+#include "moves.hpp"
+#include "moveGenerator.hpp"
+#include "fen.hpp"
 
 namespace chess
 {
