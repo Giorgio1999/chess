@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS_RELEASE
 
 project(chess VERSION 1.0.0)
 file(GLOB_RECURSE SOURCES "src/*.cpp")
-add_library(chess ${SOURCES})
+add_library(chess STATIC ${SOURCES})
 
 target_include_directories(chess PUBLIC include ${CMAKE_CURRENT_BINARY_DIR})
 
