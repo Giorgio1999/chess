@@ -64,6 +64,8 @@
             installPhase = ''
               mkdir -p $out
               cp -r * $out
+              mkdir -p $out/include
+              cp -r $src/include $out/include
             '';
           };
         }
