@@ -53,6 +53,7 @@
             cmakeflags = ''
               -DCMAKE_BUILD_TYPE=Release
               -DPROJECT_VERSION=${version}
+              -DINSTALL_PREFIX=$out
             '';
 
             buildInputs = with pkgs; [
@@ -62,10 +63,6 @@
             '';
 
             installPhase = ''
-              mkdir -p $out
-              cp -r * $out
-              mkdir -p $out/include
-              cp -r $src/include $out/include
             '';
           };
         }
