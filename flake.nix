@@ -11,6 +11,7 @@
           pkgs = import nixpkgs {
             inherit system;
           };
+          version = "1.0.0";  
         in 
         with pkgs;
         {
@@ -35,6 +36,34 @@
               echo "  with: $(make --version)"
               export PATH=$PATH:$INSTALL_PREFIX/bin
               exec zsh
+            '';
+
+          };
+          packages.default = pkgs.stdenv.mkDerivation {
+            pname = "chess";
+            version = version;
+            src = ./.;
+
+            nativeBuildInputs = with pkgs; [
+              cmake
+              gcc
+              gtest
+            ];
+
+            cmakeflags = ''
+              -DCMAKE_BUILD_TYPE=Release
+              -DPROJECT_VERSION=${version}
+            '';
+
+            buildInputs = with pkgs; [
+            ];
+
+            buildPhase = ''
+            '';
+
+            installPhase = ''
+              mkdir -p $out
+              cp -r * $out
             '';
           };
         }
