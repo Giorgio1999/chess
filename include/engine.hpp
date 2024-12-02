@@ -4,6 +4,7 @@
 #include <functional>
 #include "board.hpp"
 #include "moveGenerator.hpp"
+#include "timer.hpp"
 
 namespace chess
 {
@@ -23,6 +24,7 @@ class Engine
     chess::board::Board board;
     std::vector<chess::board::Board> gameHistory;
     chess::movegenerator::MoveGenerator moveGenerator;
+    chess::timer::Timer timer;
 
   public:
     Engine (std::string name, std::string author)
@@ -30,6 +32,7 @@ class Engine
         this->name = name;
         this->author = author;
         board = chess::board::Board ();
+        timer = chess::timer::Timer ();
     }
 
     std::string Introduce ();
@@ -153,6 +156,26 @@ class Engine
     GetBoard ()
     {
         return board;
+    }
+    std::vector<chess::consts::move>
+    GetLegalMoves ()
+    {
+        return this->moveGenerator.GetLegalMoves (*this);
+    }
+    chess::consts::bitboard
+    GetAttacks (const bool whiteToPlay)
+    {
+        return this->moveGenerator.GetAttacks (*this, whiteToPlay);
+    }
+    chess::timer::Timer
+    GetTimer ()
+    {
+        return this->timer;
+    }
+    void
+    SetTimer (const chess::timer::Timer &_timer)
+    {
+        this->timer = _timer;
     }
 };
 

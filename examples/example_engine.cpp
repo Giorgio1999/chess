@@ -6,12 +6,9 @@
 std::string
 Search (chess::engine::Engine &engine)
 {
-    while (engine.IsStop () == false)
-        {
-            std::cout << "waiting" << std::endl;
-            std::this_thread::sleep_for (std::chrono::seconds (1));
-        }
-    return "TO DO";
+    bool whiteToPlay = engine.GetBoard ().white_to_play ();
+    std::vector<chess::consts::move> legalMoves = engine.GetLegalMoves ();
+    return "bestmove " + chess::moves::move2string (legalMoves[0]);
 }
 
 int

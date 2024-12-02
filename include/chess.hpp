@@ -10,6 +10,7 @@
 #include "moves.hpp"
 #include "moveGenerator.hpp"
 #include "fen.hpp"
+#include "timer.hpp"
 
 namespace chess
 {

@@ -104,7 +104,7 @@ Engine::Bench ()
         }
     auto end = std::chrono::high_resolution_clock::now ();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (end - start).count ();
-    return std::to_string (((float)leafs / duration) / 1e6 * 1e3) + "\n";
+    return std::to_string (((float)leafs / duration) / 1e6 * 1e3) + " Mnps\n";
 }
 }
 }

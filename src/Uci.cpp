@@ -88,11 +88,30 @@ go (chess::engine::Engine &engine, std::string _command)
     std::vector<std::string> args;
     std::string command;
     Split (_command, args);
-
-    if (!args.empty ())
+    chess::timer::Timer timer;
+    for (uint i = 0; i < args.size (); i++)
         {
-            CERR << "Unknown args: " << args[0] << std::endl;
+            std::string arg = args[i];
+            CERR << arg << std::endl;
+            if (arg == "wtime")
+                {
+                    CERR << args[i + 1] << std::endl;
+                    timer.SetWtime (std::stoi (args[i + 1]));
+                }
+            if (arg == "btime")
+                {
+                    timer.SetBtime (std::stoi (args[i + 1]));
+                }
+            if (arg == "winc")
+                {
+                    timer.SetWinc (std::stoi (args[i + 1]));
+                }
+            if (arg == "binc")
+                {
+                    timer.SetBinc (std::stoi (args[i + 1]));
+                }
         }
+    engine.SetTimer (timer);
     return engine.Search ();
 }
 
