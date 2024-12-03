@@ -393,6 +393,14 @@ Board::sanitize (consts::move &move)
                     bool enpassant = ((piece_boards[pawnindex] & from) > 0) && ((ghostcopy & to) > 0);
                     if (enpassant)
                         {
+                            if (white_to_play ())
+                                {
+                                    ghostcopy = ghostcopy << 8;
+                                }
+                            else
+                                {
+                                    ghostcopy = ghostcopy >> 8;
+                                }
                             move = chess::moves::move_ (startsquare, endsquare, chess::bitboard_helper::pop_lsb (ghostcopy), true);
                         }
                 }
