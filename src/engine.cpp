@@ -106,5 +106,12 @@ Engine::Bench ()
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (end - start).count ();
     return std::to_string (((float)leafs / duration) / 1e6 * 1e3) + " Mnps\n";
 }
+bool
+Engine::IsStalemate ()
+{
+    bool whiteToPlay = board.white_to_play ();
+    int colorOffset = whiteToPlay ? 0 : 6;
+    return (GetAttacks (!whiteToPlay) & board.get_piece_boards ()[6 + colorOffset]) == 0;
+}
 }
 }

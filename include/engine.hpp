@@ -177,6 +177,7 @@ class Engine
     {
         this->timer = _timer;
     }
+    bool IsStalemate ();
 };
 
 }

@@ -21,5 +21,11 @@ chess::timer::Timer::GetTimeRemaning (const bool whiteToPlay)
         }
     return timeRemaining;
 }
+int
+chess::timer::Timer::GetTimeElapsed ()
+{
+    auto now = std::chrono::high_resolution_clock::now ();
+    return std::chrono::duration_cast<std::chrono::milliseconds> (now - start).count ();
+}
 }
 }

@@ -19,6 +19,7 @@ class Timer
     Timer () { start = std::chrono::high_resolution_clock::now (); }
 
     int GetTimeRemaning (const bool whiteToPlay);
+    int GetTimeElapsed ();
 
     void
     SetWtime (const int _wtime)
