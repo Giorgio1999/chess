@@ -207,6 +207,13 @@ bench (chess::engine::Engine &engine, std::string _command)
     return engine.Bench ();
 }
 
+std::string
+ucinewgame (chess::engine::Engine &engine, std::string _command)
+{
+    engine.NewGame ();
+    return "";
+}
+
 void
 Split (std::string &command, std::vector<std::string> &args)
 {
@@ -238,6 +245,7 @@ Uci::Uci ()
     commands["splitperft"] = splitperft;
     commands["legalmoves"] = legalmoves;
     commands["bench"] = bench;
+    commands["ucinewgame"] = ucinewgame;
 }
 consts::Command
 Uci::operator[] (std::string _command)

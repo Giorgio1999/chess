@@ -76,6 +76,12 @@ class Engine
         gameHistory.pop_back ();
     }
 
+    void
+    NewGame ()
+    {
+        gameHistory.clear ();
+    }
+
     std::string
     GetName ()
     {
