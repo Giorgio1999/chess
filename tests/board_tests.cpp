@@ -86,7 +86,8 @@ TEST (board_tests, board_makemove_speed)
     int nmm = 1e5;
     for (int i = 0; i < nmm; i++)
         {
-            b.makeMove (123);
+            chess::consts::hash dum;
+            b.makeMove (123, dum);
         }
     auto end = std::chrono::high_resolution_clock::now ();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (end - now).count ();
@@ -103,7 +104,8 @@ TEST (board_tests, board_colorboards_test)
         {
             chess::consts::move move = chess::moves::string2move (stringmoves[i]);
             std::cout << chess::moves::move2string (move) << std::endl;
-            b.makeMove (move);
+            chess::consts::hash dum;
+            b.makeMove (move, dum);
             std::array<chess::consts::bitboard, 2> control_color_boards = { 0, 0 };
             std::array<chess::consts::bitboard, 12> piece_boards = b.get_piece_boards ();
             for (int j = 0; j < 6; j++)

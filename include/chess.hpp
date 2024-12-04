@@ -11,6 +11,7 @@
 #include "moveGenerator.hpp"
 #include "fen.hpp"
 #include "timer.hpp"
+#include "hash.hpp"
 
 namespace chess
 {

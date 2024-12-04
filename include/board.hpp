@@ -38,7 +38,7 @@ class Board
     void clear_castling (chess::consts::castling_rights_name _castling);
     void flip_ghost_board (const int square);
     void set_piece (const int square, const consts::Piece _piece);
-    void makeMove (const consts::move move);
+    void makeMove (const consts::move move, chess::consts::hash &currentHash);
     void sanitize (consts::move &move);
     void init_color_boards ();
     std::array<consts::bitboard, 12>

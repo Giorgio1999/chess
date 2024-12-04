@@ -5,6 +5,7 @@
 #include "board.hpp"
 #include "moveGenerator.hpp"
 #include "timer.hpp"
+#include "hash.hpp"
 
 namespace chess
 {
@@ -25,6 +26,8 @@ class Engine
     std::vector<chess::board::Board> gameHistory;
     chess::movegenerator::MoveGenerator moveGenerator;
     chess::timer::Timer timer;
+    chess::consts::hash currentHash;
+    std::vector<chess::consts::hash> repetitionTable;
 
   public:
     Engine (std::string name, std::string author)
@@ -33,6 +36,8 @@ class Engine
         this->author = author;
         board = chess::board::Board ();
         timer = chess::timer::Timer ();
+        chess::hash::init_hash_table ();
+        std::cout << chess::hash::hash_table.pieces[0][0] << std::endl;
     }
 
     std::string Introduce ();
@@ -56,15 +61,17 @@ class Engine
     MakeMove (consts::move move)
     {
         gameHistory.push_back (board);
-        board.makeMove (move);
+        repetitionTable.push_back (currentHash);
+        board.makeMove (move, currentHash);
         return "";
     }
     std::string
     MakeSanitaryMove (consts::move move)
     {
         gameHistory.push_back (board);
+        repetitionTable.push_back (currentHash);
         board.sanitize (move);
-        board.makeMove (move);
+        board.makeMove (move, currentHash);
         return "";
     }
     std::string Bench ();
@@ -73,13 +80,16 @@ class Engine
     UndoMove ()
     {
         board = gameHistory.back ();
+        currentHash = repetitionTable.back ();
         gameHistory.pop_back ();
+        repetitionTable.pop_back ();
     }
 
     void
     NewGame ()
     {
         gameHistory.clear ();
+        repetitionTable.clear ();
     }
 
     std::string
@@ -184,6 +194,12 @@ class Engine
         this->timer = _timer;
     }
     bool IsStalemate ();
+    bool IsRepetition ();
+    chess::consts::hash
+    GetCurrentHash ()
+    {
+        return currentHash;
+    }
 };
 
 }

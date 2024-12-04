@@ -39,6 +39,7 @@ std::string
 Engine::Position (std::string _position)
 {
     fen::parse (_position, board);
+    currentHash = chess::hash::get_hash (board);
     return "";
 }
 chess::consts::bitboard
@@ -112,6 +113,11 @@ Engine::IsStalemate ()
     bool whiteToPlay = board.white_to_play ();
     int colorOffset = whiteToPlay ? 0 : 6;
     return (GetAttacks (!whiteToPlay) & board.get_piece_boards ()[6 + colorOffset]) == 0;
+}
+bool
+Engine::IsRepetition ()
+{
+    return std::count (repetitionTable.begin (), repetitionTable.end (), currentHash) == 2;
 }
 }
 }

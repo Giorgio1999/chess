@@ -18,6 +18,7 @@ typedef std::function<std::string (chess::engine::Engine &, std::string)> Comman
 typedef uint64_t bitboard;
 typedef uint8_t flag;
 typedef uint32_t move;
+typedef uint64_t hash;
 
 const std::string release = "release";
 const std::string debug = "debug";

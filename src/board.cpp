@@ -3,6 +3,7 @@
 #include "bitboard.hpp"
 #include "flags.hpp"
 #include "moves.hpp"
+#include "hash.hpp"
 #include <string>
 #include <array>
 
@@ -198,7 +199,7 @@ Board::set_piece (const int square, const consts::Piece _piece)
 }
 
 void
-Board::makeMove (const consts::move move)
+Board::makeMove (const consts::move move, chess::consts::hash &currentHash)
 {
 
     int startsquare = moves::getStartSquare (move);
@@ -232,14 +233,18 @@ Board::makeMove (const consts::move move)
             if (white_to_play ())
                 {
                     piece_boards[consts::Piece::P] ^= from;
+                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::P][startsquare];
                     piece_boards[promotion - 6] ^= to;
+                    currentHash ^= chess::hash::hash_table.pieces[promotion - 6][endsquare];
                     color_boards[0] ^= from;
                     color_boards[0] ^= to;
                 }
             else
                 {
                     piece_boards[consts::Piece::p] ^= from;
+                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::p][startsquare];
                     piece_boards[promotion] ^= to;
+                    currentHash ^= chess::hash::hash_table.pieces[promotion][endsquare];
                     color_boards[1] ^= from;
                     color_boards[1] ^= to;
                 }
@@ -247,6 +252,7 @@ Board::makeMove (const consts::move move)
             if (takepiece != consts::Piece::empty)
                 {
                     piece_boards[takepiece] ^= to;
+                    currentHash ^= chess::hash::hash_table.pieces[takepiece][endsquare];
                     color_boards[white_to_play ()] ^= to;
                 }
             ghost_board = 0;
@@ -257,8 +263,11 @@ Board::makeMove (const consts::move move)
             if (white_to_play ())
                 {
                     piece_boards[consts::Piece::P] ^= from;
+                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::P][startsquare];
                     piece_boards[consts::Piece::P] ^= to;
+                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::P][endsquare];
                     piece_boards[consts::Piece::p] ^= (chess::consts::bitboard)1 << ghostsquare;
+                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::p][ghostsquare];
                     color_boards[0] ^= from;
                     color_boards[0] ^= to;
                     color_boards[1] ^= (chess::consts::bitboard)1 << ghostsquare;
@@ -266,8 +275,11 @@ Board::makeMove (const consts::move move)
             else
                 {
                     piece_boards[consts::Piece::p] ^= from;
+                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::p][startsquare];
                     piece_boards[consts::Piece::p] ^= to;
+                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::p][endsquare];
                     piece_boards[consts::Piece::P] ^= (chess::consts::bitboard)1 << ghostsquare;
+                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::P][ghostsquare];
                     color_boards[1] ^= from;
                     color_boards[1] ^= to;
                     color_boards[0] ^= (chess::consts::bitboard)1 << ghostsquare;
@@ -278,12 +290,17 @@ Board::makeMove (const consts::move move)
     else
         {
             piece_boards[movepiece] ^= from;
+            /*std::cout << currentHash << std::endl;*/
+            currentHash ^= chess::hash::hash_table.pieces[movepiece][startsquare];
+            /*std::cout << currentHash << std::endl;*/
             piece_boards[movepiece] ^= to;
+            currentHash ^= chess::hash::hash_table.pieces[movepiece][endsquare];
             color_boards[!white_to_play ()] ^= from;
             color_boards[!white_to_play ()] ^= to;
             if (takepiece != consts::Piece::empty)
                 {
                     piece_boards[takepiece] ^= to;
+                    currentHash ^= chess::hash::hash_table.pieces[takepiece][endsquare];
                     color_boards[white_to_play ()] ^= to;
                 }
             ghost_board = 0;
@@ -312,14 +329,18 @@ Board::makeMove (const consts::move move)
                             if (endsquare == consts::Square::G8)
                                 {
                                     piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::H8;
+                                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::r][chess::consts::Square::H8];
                                     piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::F8;
+                                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::r][chess::consts::Square::F8];
                                     color_boards[1] ^= (consts::bitboard)1 << consts::Square::H8;
                                     color_boards[1] ^= (consts::bitboard)1 << consts::Square::F8;
                                 }
                             if (endsquare == consts::Square::C8)
                                 {
                                     piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::A8;
+                                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::r][chess::consts::Square::A8];
                                     piece_boards[consts::Piece::r] ^= (consts::bitboard)1 << consts::Square::D8;
+                                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::r][chess::consts::Square::D8];
                                     color_boards[1] ^= (consts::bitboard)1 << consts::Square::A8;
                                     color_boards[1] ^= (consts::bitboard)1 << consts::Square::D8;
                                 }
@@ -334,14 +355,18 @@ Board::makeMove (const consts::move move)
                             if (endsquare == consts::Square::G1)
                                 {
                                     piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::H1;
+                                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::R][chess::consts::Square::H1];
                                     piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::F1;
+                                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::R][chess::consts::Square::F1];
                                     color_boards[0] ^= (consts::bitboard)1 << consts::Square::H1;
                                     color_boards[0] ^= (consts::bitboard)1 << consts::Square::F1;
                                 }
                             if (endsquare == consts::Square::C1)
                                 {
                                     piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::A1;
+                                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::R][chess::consts::Square::A1];
                                     piece_boards[consts::Piece::R] ^= (consts::bitboard)1 << consts::Square::D1;
+                                    currentHash ^= chess::hash::hash_table.pieces[chess::consts::Piece::R][chess::consts::Square::D1];
                                     color_boards[0] ^= (consts::bitboard)1 << consts::Square::A1;
                                     color_boards[0] ^= (consts::bitboard)1 << consts::Square::D1;
                                 }
@@ -365,6 +390,7 @@ Board::makeMove (const consts::move move)
             clear_castling (consts::castling_rights_name::CASTLE_q);
         }
     flip_white_to_play ();
+    currentHash ^= chess::hash::hash_table.white_to_play;
 }
 void
 Board::sanitize (consts::move &move)

@@ -47,6 +47,11 @@ target_include_directories(moves PRIVATE ${CMAKE_SOURCE_DIR}/include
                                          ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(moves PRIVATE chess gtest gtest_main)
 
+add_executable(hash run_tests.cpp hash_tests.cpp)
+target_include_directories(hash PRIVATE ${CMAKE_SOURCE_DIR}/include
+                                        ${CMAKE_CURRENT_BINARY_DIR})
+target_link_libraries(hash PRIVATE chess gtest gtest_main)
+
 enable_testing()
 add_test(NAME bitboard COMMAND bitboard)
 add_test(NAME board COMMAND board)
@@ -56,3 +61,4 @@ add_test(NAME flag COMMAND flag)
 add_test(NAME moveGenerator_quick COMMAND moveGenerator_quick)
 add_test(NAME moveGenerator_long COMMAND moveGenerator_long)
 add_test(NAME moves COMMAND moves)
+add_test(NAME hash COMMAND hash)
