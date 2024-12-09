@@ -37,6 +37,8 @@ class Engine
         board = chess::board::Board ();
         timer = chess::timer::Timer ();
         chess::hash::init_hash_table ();
+        gameHistory.reserve (1000);
+        repetitionTable.reserve (1000);
     }
 
     std::string Introduce ();

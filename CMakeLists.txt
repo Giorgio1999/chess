@@ -25,7 +25,12 @@ target_compile_options(
           -fno-inline
           -g>
           $<$<CONFIG:Release>:
-          -DNDEBUG>)
+          -DNDEBUG>
+          $<$<CONFIG:Profile>:
+          -DNDEBUG
+          -pg>
+          -g)
+target_link_options(chess PRIVATE $<$<CONFIG:Profile>:-pg>)
 
 add_executable(magicGenerator src/magicGenerator.cpp)
 target_include_directories(magicGenerator PUBLIC include
@@ -54,7 +59,12 @@ target_compile_options(
           -fno-inline
           -g>
           $<$<CONFIG:Release>:
-          -DNDEBUG>)
+          -DNDEBUG>
+          $<$<CONFIG:Profile>:
+          -DNDEBUG
+          -g
+          -pg>)
+target_link_options(example_program PRIVATE $<$<CONFIG:Profile>:-pg>)
 
 add_executable(example_engine examples/example_engine.cpp)
 target_link_libraries(example_engine PRIVATE chess)
@@ -71,7 +81,33 @@ target_compile_options(
           -fno-inline
           -g>
           $<$<CONFIG:Release>:
-          -DNDEBUG>)
+          -DNDEBUG>
+          $<$<CONFIG:Profile>:
+          -DNDEBUG
+          -g
+          -pg>)
+target_link_options(example_engine PRIVATE $<$<CONFIG:Profile>:-pg>)
+
+add_executable(bench performance/bench.cpp)
+target_link_libraries(bench PRIVATE chess)
+set_target_properties(bench PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+target_compile_options(
+  bench
+  PRIVATE $<$<CONFIG:DEBUG>:-Wall
+          -Werror
+          -Wextra
+          -Wpedantic
+          -Wno-unused
+          -fno-inline
+          -g
+          >
+          $<$<CONFIG:Release>:-DNDEBUG
+          >
+          $<$<CONFIG:Profile>:
+          -DNDEBUG
+          -g
+          -pg>)
+target_link_options(bench PRIVATE $<$<CONFIG:Profile>:-pg>)
 
 install(
   TARGETS chess

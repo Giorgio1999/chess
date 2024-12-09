@@ -18,6 +18,7 @@ std::vector<chess::consts::move>
 chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engine)
 {
     std::vector<chess::consts::move> pseudo_legalMoves;
+    pseudo_legalMoves.reserve (218);
     chess::board::Board board = engine.GetBoard ();
     std::array<chess::consts::bitboard, 12> pieceBoards = board.get_piece_boards ();
     std::array<chess::consts::bitboard, 2> colorBoards = board.get_color_boards ();
@@ -201,7 +202,7 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
         {
             uint from = chess::bitboard_helper::pop_lsb (kingBoard);
             chess::consts::bitboard moves = kingMoves[from] & n_myColorBoard;
-            /*moves &= ~enemyAttacks;*/
+            moves &= ~enemyAttacks;
             while (moves > 0)
                 {
                     uint to = chess::bitboard_helper::pop_lsb (moves);
@@ -211,6 +212,7 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
 
     // Remove illegal moves
     std::vector<chess::consts::move> legalMoves;
+    legalMoves.reserve (218);
     for (chess::consts::move &pseudo_move : pseudo_legalMoves)
         {
             engine.MakeMove (pseudo_move);

@@ -23,6 +23,7 @@
             buildInputs = with pkgs; [
               gtest
               gdb
+              valgrind
             ];
 
             CXX_INCLUDE_PATH = "${pkgs.gcc-unwrapped}/include/c++/13.3.0/";
