@@ -194,6 +194,7 @@ class Engine
     }
     bool IsStalemate ();
     bool IsRepetition ();
+    bool IsMate ();
     chess::consts::hash
     GetCurrentHash ()
     {

@@ -3,6 +3,7 @@
 #include "chessConfig.h"
 #include "fen.hpp"
 #include "moves.hpp"
+#include "bitboard.hpp"
 #include <string>
 #include <mutex>
 #include <chrono>
@@ -111,13 +112,20 @@ bool
 Engine::IsStalemate ()
 {
     bool whiteToPlay = board.white_to_play ();
-    int colorOffset = whiteToPlay ? 0 : 6;
-    return (GetAttacks (!whiteToPlay) & board.get_piece_boards ()[6 + colorOffset]) == 0;
+    chess::consts::Piece coloredKing = whiteToPlay ? chess::consts::Piece::K : chess::consts::Piece::k;
+    return (GetAttacks (!whiteToPlay) & board.get_piece_boards ()[coloredKing]) == 0;
 }
 bool
 Engine::IsRepetition ()
 {
     return std::count (repetitionTable.begin (), repetitionTable.end (), currentHash) == 2;
+}
+bool
+Engine::IsMate ()
+{
+    bool whiteToPlay = board.white_to_play ();
+    chess::consts::Piece coloredKing = whiteToPlay ? chess::consts::Piece::K : chess::consts::Piece::k;
+    return (GetAttacks (!whiteToPlay) & board.get_piece_boards ()[coloredKing]) > 0;
 }
 }
 }
