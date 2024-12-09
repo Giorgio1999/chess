@@ -37,7 +37,6 @@ class Engine
         board = chess::board::Board ();
         timer = chess::timer::Timer ();
         chess::hash::init_hash_table ();
-        std::cout << chess::hash::hash_table.pieces[0][0] << std::endl;
     }
 
     std::string Introduce ();
