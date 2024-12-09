@@ -28,6 +28,7 @@ class MoveGenerator
     MoveGenerator ();
     std::vector<consts::move> GetLegalMoves (chess::engine::Engine &engine);
     chess::consts::bitboard GetAttacks (chess::engine::Engine &engine, const bool &white_to_play);
+    std::vector<consts::move> GetLegalCaptures (chess::engine::Engine &engine);
 };
 }
 }

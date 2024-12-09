@@ -177,6 +177,11 @@ class Engine
     {
         return this->moveGenerator.GetLegalMoves (*this);
     }
+    std::vector<chess::consts::move>
+    GetLegalCaptures ()
+    {
+        return this->moveGenerator.GetLegalCaptures (*this);
+    }
     chess::consts::bitboard
     GetAttacks (const bool whiteToPlay)
     {

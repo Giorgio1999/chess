@@ -6,7 +6,7 @@ set(CMAKE_CXX_FLAGS_RELEASE
     "-Ofast"
     CACHE STRING "Compiler flags for release build" FORCE)
 
-project(chess VERSION 1.2.2)
+project(chess VERSION 1.3.0)
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_library(chess STATIC ${SOURCES})
 

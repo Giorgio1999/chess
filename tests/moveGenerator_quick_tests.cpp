@@ -177,6 +177,17 @@ TEST (moveGenerator_tests, king_castle_test)
     EXPECT_EQ (perftresults, res);
 }
 
+TEST (moveGenerator_tests, captures_test)
+{
+    chess::engine::Engine engine ("Test engine", "Test author");
+    std::string position = "KpR5/P7/K5pP/4Q3/8/2p5/1P6/4B3 w - g7 0 1";
+    engine.Position (position);
+    std::cout << engine.ShowBoard () << std::endl;
+    int expectedNumberOfCaptures = 12;
+    int actualNumberOfCaptures = engine.GetLegalCaptures ().size ();
+    EXPECT_EQ (expectedNumberOfCaptures, actualNumberOfCaptures);
+}
+
 TEST (moveGenerator_tests, wrong_pos_1_test)
 {
     chess::engine::Engine engine ("test_engine", "test_author");

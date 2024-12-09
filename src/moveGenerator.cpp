@@ -355,6 +355,191 @@ chess::movegenerator::MoveGenerator::GetAttacks (chess::engine::Engine &engine, 
     return attacks;
 }
 
+std::vector<chess::consts::move>
+chess::movegenerator::MoveGenerator::GetLegalCaptures (chess::engine::Engine &engine)
+{
+    std::vector<chess::consts::move> captures;
+
+    chess::board::Board board = engine.GetBoard ();
+    std::array<chess::consts::bitboard, 12> pieceBoards = board.get_piece_boards ();
+    std::array<chess::consts::bitboard, 2> colorBoards = board.get_color_boards ();
+    chess::consts::bitboard ghostboard = board.get_ghost_board ();
+    chess::consts::bitboard blockerBoard = colorBoards[0] | colorBoards[1];
+    chess::consts::bitboard n_blockerBoard = ~blockerBoard;
+    bool white_to_play = board.white_to_play ();
+    uint colorOffset = white_to_play ? 0 : 6;
+    chess::consts::bitboard myColorBoard = white_to_play ? colorBoards[0] : colorBoards[1];
+    chess::consts::bitboard n_myColorBoard = ~myColorBoard;
+    chess::consts::bitboard enemyColorBoard = white_to_play ? colorBoards[1] : colorBoards[0];
+    chess::consts::bitboard n_enemyColorBoard = ~enemyColorBoard;
+    /*chess::consts::bitboard enemyAttacks = GetAttacks (engine, !white_to_play);*/
+
+    // Pawns
+    chess::consts::bitboard pawnBoard = pieceBoards[0 + colorOffset];
+    chess::consts::bitboard captures_left, captures_right, captures_right_enp, captures_left_enp;
+    chess::consts::bitboard captures_promotions_left, captures_promotions_right;
+    uint from_offset = white_to_play ? 8 : -8;
+    uint from_double_offset = white_to_play ? 16 : -16;
+    uint from_right_offset = white_to_play ? 7 : -9;
+    uint from_left_offset = white_to_play ? 9 : -7;
+    chess::consts::bitboard n_promo_rank_occ = pawnBoard & (white_to_play ? n_rankMasks[6] : n_rankMasks[1]);
+    chess::consts::bitboard promo_rank_occ = pawnBoard & (white_to_play ? rankMasks[6] : rankMasks[1]);
+    chess::consts::bitboard double_rank_occ = pawnBoard & (white_to_play ? rankMasks[1] : rankMasks[6]);
+
+    if (white_to_play)
+        {
+            captures_right = ((n_promo_rank_occ & n_fileMasks[7]) >> 7) & colorBoards[1];
+            captures_left = ((n_promo_rank_occ & n_fileMasks[0]) >> 9) & colorBoards[1];
+            captures_promotions_right = ((promo_rank_occ & n_fileMasks[7]) >> 7) & colorBoards[1];
+            captures_promotions_left = ((promo_rank_occ & n_fileMasks[0]) >> 9) & colorBoards[1];
+            captures_right_enp = ((n_promo_rank_occ & n_fileMasks[7]) >> 7) & ghostboard;
+            captures_left_enp = ((n_promo_rank_occ & n_fileMasks[0]) >> 9) & ghostboard;
+            ghostboard = ghostboard << 8;
+        }
+    else
+        {
+            captures_right = ((n_promo_rank_occ & n_fileMasks[7]) << 9) & colorBoards[0];
+            captures_left = ((n_promo_rank_occ & n_fileMasks[0]) << 7) & colorBoards[0];
+            captures_promotions_right = ((promo_rank_occ & n_fileMasks[7]) << 9) & colorBoards[0];
+            captures_promotions_left = ((promo_rank_occ & n_fileMasks[0]) << 7) & colorBoards[0];
+            captures_right_enp = ((n_promo_rank_occ & n_fileMasks[7]) << 9) & ghostboard;
+            captures_left_enp = ((n_promo_rank_occ & n_fileMasks[0]) << 7) & ghostboard;
+            ghostboard = ghostboard >> 8;
+        }
+    while (captures_right > 0)
+        {
+            uint to = chess::bitboard_helper::pop_lsb (captures_right);
+            uint from = to + from_right_offset;
+            captures.push_back (chess::moves::move_ (from, to));
+        }
+    while (captures_left > 0)
+        {
+            uint to = chess::bitboard_helper::pop_lsb (captures_left);
+            uint from = to + from_left_offset;
+            captures.push_back (chess::moves::move_ (from, to));
+        }
+    while (captures_promotions_right > 0)
+        {
+            uint to = chess::bitboard_helper::pop_lsb (captures_promotions_right);
+            uint from = to + from_right_offset;
+            for (uint piece = 7; piece < 11; piece++)
+                {
+                    captures.push_back (chess::moves::move_ (from, to, piece));
+                }
+        }
+    while (captures_promotions_left > 0)
+        {
+            uint to = chess::bitboard_helper::pop_lsb (captures_promotions_left);
+            uint from = to + from_left_offset;
+            for (uint piece = 7; piece < 11; piece++)
+                {
+                    captures.push_back (chess::moves::move_ (from, to, piece));
+                }
+        }
+    chess::consts::bitboard ghostcopy = ghostboard;
+    while (captures_right_enp > 0)
+        {
+            uint to = chess::bitboard_helper::pop_lsb (captures_right_enp);
+            uint from = to + from_right_offset;
+            int ghostsquare = chess::bitboard_helper::pop_lsb (ghostcopy);
+            captures.push_back (chess::moves::move_ (from, to, ghostsquare, true));
+        }
+    ghostcopy = ghostboard;
+    while (captures_left_enp > 0)
+        {
+            uint to = chess::bitboard_helper::pop_lsb (captures_left_enp);
+            uint from = to + from_left_offset;
+            int ghostsquare = chess::bitboard_helper::pop_lsb (ghostcopy);
+            captures.push_back (chess::moves::move_ (from, to, ghostsquare, true));
+        }
+
+    // Knights
+    chess::consts::bitboard knightBoard = pieceBoards[1 + colorOffset];
+    while (knightBoard > 0)
+        {
+            uint from = chess::bitboard_helper::pop_lsb (knightBoard);
+            chess::consts::bitboard moves = (knightMoves[from] & n_myColorBoard) & enemyColorBoard;
+            while (moves > 0)
+                {
+                    uint to = chess::bitboard_helper::pop_lsb (moves);
+                    captures.push_back (chess::moves::move_ (from, to));
+                }
+        }
+
+    // Bishops
+    chess::consts::bitboard bishopBoard = pieceBoards[2 + colorOffset];
+    while (bishopBoard > 0)
+        {
+            uint from = chess::bitboard_helper::pop_lsb (bishopBoard);
+            chess::consts::bitboard occupation = blockerBoard & chess::data::relevantoccupancy_masks_bishop[from];
+            chess::consts::bitboard moves = (chess::data::bishopMoves[from][(occupation * chess::data::magics_bishop[from]) >> (64 - chess::data::width_bishop)] & n_myColorBoard) & enemyColorBoard;
+            while (moves > 0)
+                {
+                    uint to = chess::bitboard_helper::pop_lsb (moves);
+                    captures.push_back (chess::moves::move_ (from, to));
+                }
+        }
+
+    // Rooks
+    chess::consts::bitboard rookBoard = pieceBoards[3 + colorOffset];
+    while (rookBoard > 0)
+        {
+            uint from = chess::bitboard_helper::pop_lsb (rookBoard);
+            chess::consts::bitboard occupation = blockerBoard & chess::data::relevantoccupancy_masks_rook[from];
+            chess::consts::bitboard moves = (chess::data::rookMoves[from][(occupation * chess::data::magics_rook[from]) >> (64 - chess::data::width_rook)] & n_myColorBoard) & enemyColorBoard;
+            while (moves > 0)
+                {
+                    uint to = chess::bitboard_helper::pop_lsb (moves);
+                    captures.push_back (chess::moves::move_ (from, to));
+                }
+        }
+
+    // Queens
+    chess::consts::bitboard queenBoard = pieceBoards[4 + colorOffset];
+    while (queenBoard > 0)
+        {
+            uint from = chess::bitboard_helper::pop_lsb (queenBoard);
+            chess::consts::bitboard occupation = blockerBoard & chess::data::relevantoccupancy_masks_bishop[from];
+            chess::consts::bitboard moves = chess::data::bishopMoves[from][(occupation * chess::data::magics_bishop[from]) >> (64 - chess::data::width_bishop)] & n_myColorBoard;
+            occupation = blockerBoard & chess::data::relevantoccupancy_masks_rook[from];
+            moves |= chess::data::rookMoves[from][(occupation * chess::data::magics_rook[from]) >> (64 - chess::data::width_rook)] & n_myColorBoard;
+            moves &= enemyColorBoard;
+            while (moves > 0)
+                {
+                    uint to = chess::bitboard_helper::pop_lsb (moves);
+                    captures.push_back (chess::moves::move_ (from, to));
+                }
+        }
+
+    // Kings
+    chess::consts::bitboard kingBoard = pieceBoards[5 + colorOffset];
+    while (kingBoard > 0)
+        {
+            uint from = chess::bitboard_helper::pop_lsb (kingBoard);
+            chess::consts::bitboard moves = (kingMoves[from] & n_myColorBoard) & enemyColorBoard;
+            while (moves > 0)
+                {
+                    uint to = chess::bitboard_helper::pop_lsb (moves);
+                    captures.push_back (chess::moves::move_ (from, to));
+                }
+        }
+
+    // Remove illegal moves
+    std::vector<chess::consts::move> legalCaptures;
+    for (chess::consts::move &capture : captures)
+        {
+            engine.MakeMove (capture);
+            chess::consts::bitboard kingBoard_copy = engine.GetBoard ().get_piece_boards ()[5 + colorOffset];
+            chess::consts::bitboard virtual_attacks = GetAttacks (engine, !white_to_play);
+            engine.UndoMove ();
+            if ((virtual_attacks & kingBoard_copy) == 0)
+                {
+                    legalCaptures.push_back (capture);
+                }
+        }
+    return legalCaptures;
+}
+
 void
 chess::movegenerator::MoveGenerator::initMasks ()
 {
