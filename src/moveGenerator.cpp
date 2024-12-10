@@ -31,7 +31,7 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
     chess::consts::bitboard n_myColorBoard = ~myColorBoard;
     chess::consts::bitboard enemyColorBoard = white_to_play ? colorBoards[1] : colorBoards[0];
     chess::consts::bitboard n_enemyColorBoard = ~enemyColorBoard;
-    chess::consts::bitboard enemyAttacks = GetAttacks (engine, !white_to_play);
+    /*chess::consts::bitboard enemyAttacks = GetAttacks (engine, !white_to_play);*/
 
     // Pawns
     chess::consts::bitboard pawnBoard = pieceBoards[0 + colorOffset];
@@ -202,7 +202,7 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
         {
             uint from = chess::bitboard_helper::pop_lsb (kingBoard);
             chess::consts::bitboard moves = kingMoves[from] & n_myColorBoard;
-            moves &= ~enemyAttacks;
+            /*moves &= ~enemyAttacks;*/
             while (moves > 0)
                 {
                     uint to = chess::bitboard_helper::pop_lsb (moves);
@@ -211,18 +211,30 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
         }
 
     // Remove illegal moves
+    /*std::vector<chess::consts::move> legalMoves;*/
+    /*legalMoves.reserve (218);*/
+    /*for (chess::consts::move &pseudo_move : pseudo_legalMoves)*/
+    /*    {*/
+    /*        engine.MakeMove (pseudo_move);*/
+    /*        chess::consts::bitboard kingBoard_copy = engine.GetBoard ().get_piece_boards ()[5 + colorOffset];*/
+    /*        chess::consts::bitboard virtual_attacks = GetAttacks (engine, !white_to_play);*/
+    /*        engine.UndoMove ();*/
+    /*        if ((virtual_attacks & kingBoard_copy) == 0)*/
+    /*            {*/
+    /*                legalMoves.push_back (pseudo_move);*/
+    /*            }*/
+    /*    }*/
     std::vector<chess::consts::move> legalMoves;
     legalMoves.reserve (218);
     for (chess::consts::move &pseudo_move : pseudo_legalMoves)
         {
             engine.MakeMove (pseudo_move);
             chess::consts::bitboard kingBoard_copy = engine.GetBoard ().get_piece_boards ()[5 + colorOffset];
-            chess::consts::bitboard virtual_attacks = GetAttacks (engine, !white_to_play);
-            engine.UndoMove ();
-            if ((virtual_attacks & kingBoard_copy) == 0)
+            if (!IsSquareAttacked (engine, !white_to_play, (chess::consts::Square)chess::bitboard_helper::pop_lsb (kingBoard_copy)))
                 {
                     legalMoves.push_back (pseudo_move);
                 }
+            engine.UndoMove ();
         }
 
     // Kings castling
@@ -232,8 +244,12 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
         {
             chess::consts::bitboard castlemask_attacks = white_to_play ? 0x7000000000000000 : 0x0000000000000070;
             chess::consts::bitboard castlemask_occupations = white_to_play ? 0x6000000000000000 : 0x0000000000000060;
-            chess::consts::bitboard n_cancastle = (enemyAttacks & castlemask_attacks) | (blockerBoard & castlemask_occupations);
-            if (n_cancastle == 0)
+            /*chess::consts::bitboard n_cancastle = (enemyAttacks & castlemask_attacks) | (blockerBoard & castlemask_occupations);*/
+            chess::consts::bitboard n_cancastle = (blockerBoard & castlemask_occupations);
+            chess::consts::Square castleSquare_G = white_to_play ? chess::consts::Square::G1 : chess::consts::Square::G8;
+            chess::consts::Square castleSquare_F = white_to_play ? chess::consts::Square::F1 : chess::consts::Square::F8;
+            chess::consts::Square castleSquare_E = white_to_play ? chess::consts::Square::E1 : chess::consts::Square::E8;
+            if (n_cancastle == 0 && !IsSquareAttacked (engine, !white_to_play, castleSquare_E) && !IsSquareAttacked (engine, !white_to_play, castleSquare_F) && !IsSquareAttacked (engine, !white_to_play, castleSquare_G))
                 {
                     uint from = white_to_play ? 60 : 4;
                     uint to = white_to_play ? 62 : 6;
@@ -244,8 +260,12 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
         {
             chess::consts::bitboard castlemask_attacks = white_to_play ? 0x1C00000000000000 : 0x000000000000001C;
             chess::consts::bitboard castlemask_occupations = white_to_play ? 0x0E00000000000000 : 0x000000000000000E;
-            chess::consts::bitboard n_cancastle = (enemyAttacks & castlemask_attacks) | (blockerBoard & castlemask_occupations);
-            if (n_cancastle == 0)
+            /*chess::consts::bitboard n_cancastle = (enemyAttacks & castlemask_attacks) | (blockerBoard & castlemask_occupations);*/
+            chess::consts::bitboard n_cancastle = blockerBoard & castlemask_occupations;
+            chess::consts::Square castleSquare_E = white_to_play ? chess::consts::Square::E1 : chess::consts::Square::E8;
+            chess::consts::Square castleSquare_D = white_to_play ? chess::consts::Square::D1 : chess::consts::Square::D8;
+            chess::consts::Square castleSquare_C = white_to_play ? chess::consts::Square::C1 : chess::consts::Square::C8;
+            if (n_cancastle == 0 && !IsSquareAttacked (engine, !white_to_play, castleSquare_E) && !IsSquareAttacked (engine, !white_to_play, castleSquare_D) && !IsSquareAttacked (engine, !white_to_play, castleSquare_C))
                 {
                     uint from = white_to_play ? 60 : 4;
                     uint to = white_to_play ? 58 : 2;
@@ -540,6 +560,84 @@ chess::movegenerator::MoveGenerator::GetLegalCaptures (chess::engine::Engine &en
                 }
         }
     return legalCaptures;
+}
+
+bool
+chess::movegenerator::MoveGenerator::IsSquareAttacked (chess::engine::Engine &engine, const bool &white_to_play, const chess::consts::Square &square)
+{
+    chess::board::Board board = engine.GetBoard ();
+    int colorOffset = white_to_play ? 0 : 6;
+    auto pieceBoard = board.get_piece_boards ();
+    chess::consts::bitboard pawns = pieceBoard[0 + colorOffset];
+    chess::consts::bitboard knights = pieceBoard[1 + colorOffset];
+    chess::consts::bitboard bishops = pieceBoard[2 + colorOffset];
+    chess::consts::bitboard rooks = pieceBoard[3 + colorOffset];
+    chess::consts::bitboard queens = pieceBoard[4 + colorOffset];
+    chess::consts::bitboard kings = pieceBoard[5 + colorOffset];
+    auto colorBoards = board.get_color_boards ();
+    chess::consts::bitboard thisColorBoard = white_to_play ? colorBoards[0] : colorBoards[1];
+    chess::consts::bitboard enemyColorBoard = white_to_play ? colorBoards[1] : colorBoards[0];
+
+    chess::consts::bitboard target = (chess::consts::bitboard)1 << square;
+
+    // Pawns
+    if (white_to_play)
+        {
+            if ((((pawns & n_fileMasks[7]) >> 7) & target) > 0)
+                {
+                    return true;
+                }
+            if ((((pawns & n_fileMasks[0]) >> 9) & target) > 0)
+                {
+                    return true;
+                }
+        }
+    else
+        {
+            if ((((pawns & n_fileMasks[0]) << 7) & target) > 0)
+                {
+                    return true;
+                }
+            if ((((pawns & n_fileMasks[7]) << 9) & target) > 0)
+                {
+                    return true;
+                }
+        }
+
+    // Knights
+    if ((knightMoves[square] & knights) > 0)
+        {
+            return true;
+        }
+
+    chess::consts::bitboard blockerBoard = thisColorBoard | enemyColorBoard;
+
+    // Bishops, Queens
+    chess::consts::bitboard diagonalSliders = bishops | queens;
+
+    chess::consts::bitboard occupation = blockerBoard & chess::data::relevantoccupancy_masks_bishop[square];
+    chess::consts::bitboard moves = chess::data::bishopMoves[square][(occupation * chess::data::magics_bishop[square]) >> (64 - chess::data::width_bishop)];
+    if ((diagonalSliders & moves) > 0)
+        {
+            return true;
+        }
+
+    // Rooks, Queens
+    chess::consts::bitboard lineSliders = rooks | queens;
+    occupation = blockerBoard & chess::data::relevantoccupancy_masks_rook[square];
+    moves = chess::data::rookMoves[square][(occupation * chess::data::magics_rook[square]) >> (64 - chess::data::width_rook)];
+    if ((lineSliders & moves) > 0)
+        {
+            return true;
+        }
+
+    // King
+    if ((kingMoves[square] & kings) > 0)
+        {
+            return true;
+        }
+
+    return false;
 }
 
 void
