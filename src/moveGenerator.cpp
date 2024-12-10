@@ -31,7 +31,6 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
     chess::consts::bitboard n_myColorBoard = ~myColorBoard;
     chess::consts::bitboard enemyColorBoard = white_to_play ? colorBoards[1] : colorBoards[0];
     chess::consts::bitboard n_enemyColorBoard = ~enemyColorBoard;
-    /*chess::consts::bitboard enemyAttacks = GetAttacks (engine, !white_to_play);*/
 
     // Pawns
     chess::consts::bitboard pawnBoard = pieceBoards[0 + colorOffset];
@@ -202,7 +201,6 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
         {
             uint from = chess::bitboard_helper::pop_lsb (kingBoard);
             chess::consts::bitboard moves = kingMoves[from] & n_myColorBoard;
-            /*moves &= ~enemyAttacks;*/
             while (moves > 0)
                 {
                     uint to = chess::bitboard_helper::pop_lsb (moves);
@@ -211,19 +209,6 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
         }
 
     // Remove illegal moves
-    /*std::vector<chess::consts::move> legalMoves;*/
-    /*legalMoves.reserve (218);*/
-    /*for (chess::consts::move &pseudo_move : pseudo_legalMoves)*/
-    /*    {*/
-    /*        engine.MakeMove (pseudo_move);*/
-    /*        chess::consts::bitboard kingBoard_copy = engine.GetBoard ().get_piece_boards ()[5 + colorOffset];*/
-    /*        chess::consts::bitboard virtual_attacks = GetAttacks (engine, !white_to_play);*/
-    /*        engine.UndoMove ();*/
-    /*        if ((virtual_attacks & kingBoard_copy) == 0)*/
-    /*            {*/
-    /*                legalMoves.push_back (pseudo_move);*/
-    /*            }*/
-    /*    }*/
     std::vector<chess::consts::move> legalMoves;
     legalMoves.reserve (218);
     for (chess::consts::move &pseudo_move : pseudo_legalMoves)
@@ -242,9 +227,7 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
     bool castlequeen = white_to_play ? board.castling ().Q : board.castling ().q;
     if (castleking)
         {
-            chess::consts::bitboard castlemask_attacks = white_to_play ? 0x7000000000000000 : 0x0000000000000070;
             chess::consts::bitboard castlemask_occupations = white_to_play ? 0x6000000000000000 : 0x0000000000000060;
-            /*chess::consts::bitboard n_cancastle = (enemyAttacks & castlemask_attacks) | (blockerBoard & castlemask_occupations);*/
             chess::consts::bitboard n_cancastle = (blockerBoard & castlemask_occupations);
             chess::consts::Square castleSquare_G = white_to_play ? chess::consts::Square::G1 : chess::consts::Square::G8;
             chess::consts::Square castleSquare_F = white_to_play ? chess::consts::Square::F1 : chess::consts::Square::F8;
@@ -258,9 +241,7 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
         }
     if (castlequeen)
         {
-            chess::consts::bitboard castlemask_attacks = white_to_play ? 0x1C00000000000000 : 0x000000000000001C;
             chess::consts::bitboard castlemask_occupations = white_to_play ? 0x0E00000000000000 : 0x000000000000000E;
-            /*chess::consts::bitboard n_cancastle = (enemyAttacks & castlemask_attacks) | (blockerBoard & castlemask_occupations);*/
             chess::consts::bitboard n_cancastle = blockerBoard & castlemask_occupations;
             chess::consts::Square castleSquare_E = white_to_play ? chess::consts::Square::E1 : chess::consts::Square::E8;
             chess::consts::Square castleSquare_D = white_to_play ? chess::consts::Square::D1 : chess::consts::Square::D8;
@@ -547,19 +528,20 @@ chess::movegenerator::MoveGenerator::GetLegalCaptures (chess::engine::Engine &en
         }
 
     // Remove illegal moves
-    std::vector<chess::consts::move> legalCaptures;
-    for (chess::consts::move &capture : captures)
+    std::vector<chess::consts::move> legalMoves;
+    legalMoves.reserve (218);
+    for (chess::consts::move &pseudo_move : captures)
         {
-            engine.MakeMove (capture);
+            engine.MakeMove (pseudo_move);
             chess::consts::bitboard kingBoard_copy = engine.GetBoard ().get_piece_boards ()[5 + colorOffset];
-            chess::consts::bitboard virtual_attacks = GetAttacks (engine, !white_to_play);
-            engine.UndoMove ();
-            if ((virtual_attacks & kingBoard_copy) == 0)
+            if (!IsSquareAttacked (engine, !white_to_play, (chess::consts::Square)chess::bitboard_helper::pop_lsb (kingBoard_copy)))
                 {
-                    legalCaptures.push_back (capture);
+                    legalMoves.push_back (pseudo_move);
                 }
+            engine.UndoMove ();
         }
-    return legalCaptures;
+
+    return legalMoves;
 }
 
 bool
