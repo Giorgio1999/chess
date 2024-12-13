@@ -559,8 +559,40 @@ chess::movegenerator::MoveGenerator::IsSquareAttacked (chess::engine::Engine &en
     auto colorBoards = board.get_color_boards ();
     chess::consts::bitboard thisColorBoard = white_to_play ? colorBoards[0] : colorBoards[1];
     chess::consts::bitboard enemyColorBoard = white_to_play ? colorBoards[1] : colorBoards[0];
+    chess::consts::bitboard blockerBoard = thisColorBoard | enemyColorBoard;
 
     chess::consts::bitboard target = (chess::consts::bitboard)1 << square;
+
+    // Bishops, Queens
+    chess::consts::bitboard diagonalSliders = bishops | queens;
+
+    chess::consts::bitboard occupation = blockerBoard & chess::data::relevantoccupancy_masks_bishop[square];
+    chess::consts::bitboard moves = chess::data::bishopMoves[square][(occupation * chess::data::magics_bishop[square]) >> (64 - chess::data::width_bishop)];
+    if ((diagonalSliders & moves) > 0)
+        {
+            return true;
+        }
+
+    // Rooks, Queens
+    chess::consts::bitboard lineSliders = rooks | queens;
+    occupation = blockerBoard & chess::data::relevantoccupancy_masks_rook[square];
+    moves = chess::data::rookMoves[square][(occupation * chess::data::magics_rook[square]) >> (64 - chess::data::width_rook)];
+    if ((lineSliders & moves) > 0)
+        {
+            return true;
+        }
+
+    // Knights
+    if ((knightMoves[square] & knights) > 0)
+        {
+            return true;
+        }
+
+    // King
+    if ((kingMoves[square] & kings) > 0)
+        {
+            return true;
+        }
 
     // Pawns
     if (white_to_play)
@@ -584,39 +616,6 @@ chess::movegenerator::MoveGenerator::IsSquareAttacked (chess::engine::Engine &en
                 {
                     return true;
                 }
-        }
-
-    // Knights
-    if ((knightMoves[square] & knights) > 0)
-        {
-            return true;
-        }
-
-    chess::consts::bitboard blockerBoard = thisColorBoard | enemyColorBoard;
-
-    // Bishops, Queens
-    chess::consts::bitboard diagonalSliders = bishops | queens;
-
-    chess::consts::bitboard occupation = blockerBoard & chess::data::relevantoccupancy_masks_bishop[square];
-    chess::consts::bitboard moves = chess::data::bishopMoves[square][(occupation * chess::data::magics_bishop[square]) >> (64 - chess::data::width_bishop)];
-    if ((diagonalSliders & moves) > 0)
-        {
-            return true;
-        }
-
-    // Rooks, Queens
-    chess::consts::bitboard lineSliders = rooks | queens;
-    occupation = blockerBoard & chess::data::relevantoccupancy_masks_rook[square];
-    moves = chess::data::rookMoves[square][(occupation * chess::data::magics_rook[square]) >> (64 - chess::data::width_rook)];
-    if ((lineSliders & moves) > 0)
-        {
-            return true;
-        }
-
-    // King
-    if ((kingMoves[square] & kings) > 0)
-        {
-            return true;
         }
 
     return false;
