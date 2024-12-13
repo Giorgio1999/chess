@@ -18,9 +18,14 @@ pop_lsb (consts::bitboard &b)
     return res;
 }
 
+inline int
+count (const consts::bitboard &b)
+{
+    return __builtin_popcount (b);
+}
+
 void flip_bit (consts::bitboard &b, const int square);
 std::string visualize_bitboard (chess::consts::bitboard b);
-int count (consts::bitboard b);
 }
 }
 

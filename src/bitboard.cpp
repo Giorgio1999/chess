@@ -48,16 +48,16 @@ visualize_bitboard (chess::consts::bitboard b)
     return res;
 }
 
-int
-count (chess::consts::bitboard b)
-{
-    int res = 0;
-    while (b > 0)
-        {
-            res++;
-            int dum = pop_lsb (b);
-        }
-    return res;
-}
+/*int*/
+/*count (chess::consts::bitboard b)*/
+/*{*/
+/*    int res = 0;*/
+/*    while (b > 0)*/
+/*        {*/
+/*            res++;*/
+/*            int dum = pop_lsb (b);*/
+/*        }*/
+/*    return res;*/
+/*}*/
 }
 }
