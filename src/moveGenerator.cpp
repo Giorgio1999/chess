@@ -14,26 +14,9 @@ chess::movegenerator::MoveGenerator::MoveGenerator ()
     initBishopMoves ();
 }
 
-std::vector<chess::consts::move>
-chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engine)
+void
+chess::movegenerator::MoveGenerator::fillPawnMoves (chess::consts::bitboard pawnBoard, std::vector<chess::consts::move> &pseudo_legalMoves)
 {
-    std::vector<chess::consts::move> pseudo_legalMoves;
-    pseudo_legalMoves.reserve (218);
-    chess::board::Board board = engine.GetBoard ();
-    std::array<chess::consts::bitboard, 12> pieceBoards = board.get_piece_boards ();
-    std::array<chess::consts::bitboard, 2> colorBoards = board.get_color_boards ();
-    chess::consts::bitboard ghostboard = board.get_ghost_board ();
-    chess::consts::bitboard blockerBoard = colorBoards[0] | colorBoards[1];
-    chess::consts::bitboard n_blockerBoard = ~blockerBoard;
-    bool white_to_play = board.white_to_play ();
-    uint colorOffset = white_to_play ? 0 : 6;
-    chess::consts::bitboard myColorBoard = white_to_play ? colorBoards[0] : colorBoards[1];
-    chess::consts::bitboard n_myColorBoard = ~myColorBoard;
-    chess::consts::bitboard enemyColorBoard = white_to_play ? colorBoards[1] : colorBoards[0];
-    chess::consts::bitboard n_enemyColorBoard = ~enemyColorBoard;
-
-    // Pawns
-    chess::consts::bitboard pawnBoard = pieceBoards[0 + colorOffset];
     chess::consts::bitboard singlePushs, doublePushs, promotions, captures_left, captures_right, captures_right_enp, captures_left_enp;
     chess::consts::bitboard captures_promotions_left, captures_promotions_right;
     uint from_offset = white_to_play ? 8 : -8;
@@ -137,9 +120,11 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
             int ghostsquare = chess::bitboard_helper::pop_lsb (ghostcopy);
             pseudo_legalMoves.push_back (chess::moves::move_ (from, to, ghostsquare, true));
         }
+}
 
-    // Knights
-    chess::consts::bitboard knightBoard = pieceBoards[1 + colorOffset];
+void
+chess::movegenerator::MoveGenerator::fillKnightMoves (chess::consts::bitboard knightBoard, std::vector<chess::consts::move> &pseudo_legalMoves)
+{
     while (knightBoard > 0)
         {
             uint from = chess::bitboard_helper::pop_lsb (knightBoard);
@@ -150,9 +135,11 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
                     pseudo_legalMoves.push_back (chess::moves::move_ (from, to));
                 }
         }
+}
 
-    // Bishops
-    chess::consts::bitboard bishopBoard = pieceBoards[2 + colorOffset];
+void
+chess::movegenerator::MoveGenerator::fillBishopMoves (chess::consts::bitboard bishopBoard, std::vector<chess::consts::move> &pseudo_legalMoves)
+{
     while (bishopBoard > 0)
         {
             uint from = chess::bitboard_helper::pop_lsb (bishopBoard);
@@ -164,9 +151,11 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
                     pseudo_legalMoves.push_back (chess::moves::move_ (from, to));
                 }
         }
+}
 
-    // Rooks
-    chess::consts::bitboard rookBoard = pieceBoards[3 + colorOffset];
+void
+chess::movegenerator::MoveGenerator::fillRookMoves (chess::consts::bitboard rookBoard, std::vector<chess::consts::move> &pseudo_legalMoves)
+{
     while (rookBoard > 0)
         {
             uint from = chess::bitboard_helper::pop_lsb (rookBoard);
@@ -178,9 +167,11 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
                     pseudo_legalMoves.push_back (chess::moves::move_ (from, to));
                 }
         }
+}
 
-    // Queens
-    chess::consts::bitboard queenBoard = pieceBoards[4 + colorOffset];
+void
+chess::movegenerator::MoveGenerator::fillQueenMoves (chess::consts::bitboard queenBoard, std::vector<chess::consts::move> &pseudo_legalMoves)
+{
     while (queenBoard > 0)
         {
             uint from = chess::bitboard_helper::pop_lsb (queenBoard);
@@ -194,9 +185,11 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
                     pseudo_legalMoves.push_back (chess::moves::move_ (from, to));
                 }
         }
+}
 
-    // Kings
-    chess::consts::bitboard kingBoard = pieceBoards[5 + colorOffset];
+void
+chess::movegenerator::MoveGenerator::fillKingMoves (chess::consts::bitboard kingBoard, std::vector<chess::consts::move> &pseudo_legalMoves)
+{
     while (kingBoard > 0)
         {
             uint from = chess::bitboard_helper::pop_lsb (kingBoard);
@@ -207,22 +200,11 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
                     pseudo_legalMoves.push_back (chess::moves::move_ (from, to));
                 }
         }
+}
 
-    // Remove illegal moves
-    std::vector<chess::consts::move> legalMoves;
-    legalMoves.reserve (218);
-    for (chess::consts::move &pseudo_move : pseudo_legalMoves)
-        {
-            engine.MakeMove (pseudo_move);
-            chess::consts::bitboard kingBoard_copy = engine.GetBoard ().get_piece_boards ()[5 + colorOffset];
-            if (!IsSquareAttacked (engine, !white_to_play, (chess::consts::Square)chess::bitboard_helper::pop_lsb (kingBoard_copy)))
-                {
-                    legalMoves.push_back (pseudo_move);
-                }
-            engine.UndoMove ();
-        }
-
-    // Kings castling
+void
+chess::movegenerator::MoveGenerator::fillCastlingMoves (chess::engine::Engine &engine, std::vector<chess::consts::move> &legalMoves)
+{
     bool castleking = white_to_play ? board.castling ().K : board.castling ().k;
     bool castlequeen = white_to_play ? board.castling ().Q : board.castling ().q;
     if (castleking)
@@ -253,8 +235,68 @@ chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engin
                     legalMoves.push_back (chess::moves::move_ (from, to));
                 }
         }
+}
 
-    return legalMoves;
+void
+chess::movegenerator::MoveGenerator::filterIllegalMoves (chess::engine::Engine &engine, std::vector<chess::consts::move> &pseudo_legalMoves, std::vector<chess::consts::move> &legalMoves)
+{
+    for (chess::consts::move &pseudo_move : pseudo_legalMoves)
+        {
+            engine.MakeMove (pseudo_move);
+            chess::consts::bitboard kingBoard_copy = engine.GetBoard ().get_piece_boards ()[5 + colorOffset];
+            if (!IsSquareAttacked (engine, !white_to_play, (chess::consts::Square)chess::bitboard_helper::pop_lsb (kingBoard_copy)))
+                {
+                    legalMoves.push_back (pseudo_move);
+                }
+            engine.UndoMove ();
+        }
+}
+
+std::vector<chess::consts::move> &
+chess::movegenerator::MoveGenerator::GetLegalMoves (chess::engine::Engine &engine)
+{
+    persistent_pseudo_legalMoves.clear ();
+    persistent_pseudo_legalMoves.reserve (218);
+    board = engine.GetBoard ();
+    pieceBoards = board.get_piece_boards ();
+    colorBoards = board.get_color_boards ();
+    ghostboard = board.get_ghost_board ();
+    blockerBoard = colorBoards[0] | colorBoards[1];
+    n_blockerBoard = ~blockerBoard;
+    white_to_play = board.white_to_play ();
+    colorOffset = white_to_play ? 0 : 6;
+    myColorBoard = white_to_play ? colorBoards[0] : colorBoards[1];
+    n_myColorBoard = ~myColorBoard;
+    enemyColorBoard = white_to_play ? colorBoards[1] : colorBoards[0];
+    n_enemyColorBoard = ~enemyColorBoard;
+
+    // Pawns
+    fillPawnMoves (pieceBoards[0 + colorOffset], persistent_pseudo_legalMoves);
+
+    // Knights
+    fillKnightMoves (pieceBoards[1 + colorOffset], persistent_pseudo_legalMoves);
+
+    // Bishops
+    fillBishopMoves (pieceBoards[2 + colorOffset], persistent_pseudo_legalMoves);
+
+    // Rooks
+    fillRookMoves (pieceBoards[3 + colorOffset], persistent_pseudo_legalMoves);
+
+    // Queens
+    fillQueenMoves (pieceBoards[4 + colorOffset], persistent_pseudo_legalMoves);
+
+    // Kings
+    fillKingMoves (pieceBoards[5 + colorOffset], persistent_pseudo_legalMoves);
+
+    // Remove illegal moves
+    persistent_legalMoves.clear ();
+    persistent_legalMoves.reserve (218);
+    filterIllegalMoves (engine, persistent_pseudo_legalMoves, persistent_legalMoves);
+
+    // Kings castling
+    fillCastlingMoves (engine, persistent_legalMoves);
+
+    return persistent_legalMoves;
 }
 
 chess::consts::bitboard

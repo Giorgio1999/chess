@@ -11,7 +11,7 @@
           pkgs = import nixpkgs {
             inherit system;
           };
-          version = "1.4.0";  
+          version = "1.4.3";  
         in 
         with pkgs;
         {

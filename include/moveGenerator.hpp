@@ -2,6 +2,7 @@
 #define MOVEGENERATOR_MOVEGENERATOR_HPP
 
 #include "Defs.hpp"
+#include "board.hpp"
 #include <array>
 
 namespace chess
@@ -18,15 +19,40 @@ class MoveGenerator
     std::array<chess::consts::bitboard, 64> knightMoves;
     std::array<chess::consts::bitboard, 64> kingMoves;
 
+    chess::board::Board board;
+    std::array<chess::consts::bitboard, 12> pieceBoards;
+    std::array<chess::consts::bitboard, 2> colorBoards;
+    chess::consts::bitboard ghostboard;
+    chess::consts::bitboard blockerBoard;
+    chess::consts::bitboard n_blockerBoard;
+    bool white_to_play;
+    uint colorOffset;
+    chess::consts::bitboard myColorBoard;
+    chess::consts::bitboard n_myColorBoard;
+    chess::consts::bitboard enemyColorBoard;
+    chess::consts::bitboard n_enemyColorBoard;
+
+    std::vector<chess::consts::move> persistent_pseudo_legalMoves;
+    std::vector<chess::consts::move> persistent_legalMoves;
+
     void initMasks ();
     void initKnightMoves ();
     void initRookMoves ();
     void initKingMoves ();
     void initBishopMoves ();
 
+    void fillPawnMoves (chess::consts::bitboard pawnBoard, std::vector<chess::consts::move> &pseudo_legalMoves);
+    void fillKnightMoves (chess::consts::bitboard knightBoard, std::vector<chess::consts::move> &pseudo_legalMoves);
+    void fillBishopMoves (chess::consts::bitboard bishopBoard, std::vector<chess::consts::move> &pseudo_legalMoves);
+    void fillRookMoves (chess::consts::bitboard rookBoard, std::vector<chess::consts::move> &pseudo_legalMoves);
+    void fillQueenMoves (chess::consts::bitboard queenBoard, std::vector<chess::consts::move> &pseudo_legalMoves);
+    void fillKingMoves (chess::consts::bitboard kingBoard, std::vector<chess::consts::move> &pseudo_legalMoves);
+    void fillCastlingMoves (chess::engine::Engine &engine, std::vector<chess::consts::move> &legalMoves);
+    void filterIllegalMoves (chess::engine::Engine &engine, std::vector<chess::consts::move> &pseudo_legalMoves, std::vector<chess::consts::move> &legalMoves);
+
   public:
     MoveGenerator ();
-    std::vector<consts::move> GetLegalMoves (chess::engine::Engine &engine);
+    std::vector<consts::move> &GetLegalMoves (chess::engine::Engine &engine);
     chess::consts::bitboard GetAttacks (chess::engine::Engine &engine, const bool &white_to_play);
     std::vector<consts::move> GetLegalCaptures (chess::engine::Engine &engine);
     bool IsSquareAttacked (chess::engine::Engine &engine, const bool &white_to_play, const chess::consts::Square &square);
