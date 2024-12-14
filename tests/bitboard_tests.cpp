@@ -49,6 +49,18 @@ TEST (bitboard_tests, bitboard_test_speed)
     EXPECT_LT (elapsed_seconds.count (), 1e-5);
 }
 
+TEST (bitboard_tests, bitboard_test_count)
+{
+    int numBits = 64;
+    chess::consts::bitboard bruhBoard = (chess::consts::bitboard)0;
+    for (int i = 0; i < numBits; i++)
+        {
+            bruhBoard |= (chess::consts::bitboard)1 << i;
+        }
+    std::cout << chess::bitboard_helper::visualize_bitboard (bruhBoard) << std::endl;
+    EXPECT_EQ (numBits, chess::bitboard_helper::count (bruhBoard));
+}
+
 TEST (bitboard_tests, bitboard_test_visualize)
 {
     chess::consts::bitboard board = chess::consts::BITBOARD_MAX;

@@ -49,12 +49,25 @@ class MoveGenerator
     void fillKingMoves (chess::consts::bitboard kingBoard, std::vector<chess::consts::move> &pseudo_legalMoves);
     void fillCastlingMoves (chess::engine::Engine &engine, std::vector<chess::consts::move> &legalMoves);
     void filterIllegalMoves (chess::engine::Engine &engine, std::vector<chess::consts::move> &pseudo_legalMoves, std::vector<chess::consts::move> &legalMoves);
+    void fillPawnCaptures (chess::consts::bitboard pawnBoard, std::vector<chess::consts::move> &pseudo_legalMoves);
+    void fillKnightCaptures (chess::consts::bitboard knightBoard, std::vector<chess::consts::move> &pseudo_legalMoves);
+    void fillBishopCaptures (chess::consts::bitboard bishopBoard, std::vector<chess::consts::move> &pseudo_legalMoves);
+    void fillRookCaptures (chess::consts::bitboard rookBoard, std::vector<chess::consts::move> &pseudo_legalMoves);
+    void fillQueenCaptures (chess::consts::bitboard queenBoard, std::vector<chess::consts::move> &pseudo_legalMoves);
+    void fillKingCaptures (chess::consts::bitboard kingBoard, std::vector<chess::consts::move> &pseudo_legalMoves);
+    void fillPawnAttacks (chess::consts::bitboard pawnBoard, chess::consts::bitboard &attacks);
+    void fillKnightAttacks (chess::consts::bitboard knightBoard, chess::consts::bitboard &attacks);
+    void fillBishopAttacks (chess::consts::bitboard bishopBoard, chess::consts::bitboard &attacks);
+    void fillRookAttacks (chess::consts::bitboard rookBoard, chess::consts::bitboard &attacks);
+    void fillQueenAttacks (chess::consts::bitboard queenBoard, chess::consts::bitboard &attacks);
+    void fillKingAttacks (chess::consts::bitboard kingBoard, chess::consts::bitboard &attacks);
 
   public:
     MoveGenerator ();
     std::vector<consts::move> &GetLegalMoves (chess::engine::Engine &engine);
     chess::consts::bitboard GetAttacks (chess::engine::Engine &engine, const bool &white_to_play);
-    std::vector<consts::move> GetLegalCaptures (chess::engine::Engine &engine);
+    chess::consts::bitboard GetAttacks (chess::engine::Engine &engine, const chess::consts::Piece piece, const int square);
+    std::vector<consts::move> &GetLegalCaptures (chess::engine::Engine &engine);
     bool IsSquareAttacked (chess::engine::Engine &engine, const bool &white_to_play, const chess::consts::Square &square);
 };
 }

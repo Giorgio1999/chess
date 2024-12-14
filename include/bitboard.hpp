@@ -21,7 +21,7 @@ pop_lsb (consts::bitboard &b)
 inline int
 count (const consts::bitboard &b)
 {
-    return __builtin_popcount (b);
+    return __builtin_popcountll (b);
 }
 
 void flip_bit (consts::bitboard &b, const int square);

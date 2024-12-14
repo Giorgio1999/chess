@@ -432,5 +432,6 @@ Board::sanitize (consts::move &move)
                 }
         }
 }
+
 }
 }

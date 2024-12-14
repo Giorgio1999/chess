@@ -169,7 +169,7 @@ class Engine
     {
         ready = _ready;
     }
-    chess::board::Board
+    chess::board::Board &
     GetBoard ()
     {
         return board;
@@ -188,6 +188,11 @@ class Engine
     GetAttacks (const bool whiteToPlay)
     {
         return this->moveGenerator.GetAttacks (*this, whiteToPlay);
+    }
+    chess::consts::bitboard
+    GetAttacks (const chess::consts::Piece &piece, const chess::consts::Square square)
+    {
+        return this->moveGenerator.GetAttacks (*this, piece, (int)square);
     }
     chess::timer::Timer
     GetTimer ()
