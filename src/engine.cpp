@@ -30,7 +30,7 @@ Engine::Introduce ()
 void
 Engine::SetOption (const std::vector<std::string> &args)
 {
-    options[args[0]].setValue (std::stoi (args[1]));
+    options[args[1]].setValue (std::stoi (args[3]));
     update (*this);
 }
 void
