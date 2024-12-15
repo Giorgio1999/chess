@@ -20,6 +20,7 @@ Engine::Introduce ()
     std::string out = "id name " + name + " " + std::to_string (version_major) + "." + std::to_string (version_minor) + "." + std::to_string (version_patch);
     out += " chess " + std::to_string (chess_VERSION_MAJOR) + "." + std::to_string (chess_VERSION_MINOR) + "." + std::to_string (chess_VERSION_PATCH) + " " + consts::CONFIGURATION + "\n";
     out += "id author " + author + "\n";
+    out += "option ";
     for (const auto &option : options)
         {
             out += option.second.print () + "\n";
