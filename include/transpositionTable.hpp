@@ -11,7 +11,10 @@ namespace transposition
 template <typename T> concept ComparableEntry = requires (const T &a, const T &b)
 {
     {
-        a >= b
+        a.pushable (b)
+    } -> std::convertible_to<bool>;
+    {
+        a.pullable (b)
     } -> std::convertible_to<bool>;
     {
         a.hash
@@ -57,7 +60,7 @@ template <ComparableEntry T> class TranspositionTable
     {
         size_t index = entry.hash & (tableSize - 1);
         T oldEntry = table[index];
-        if (entry >= oldEntry)
+        if (oldEntry.pushable (entry))
             {
                 table[index] = entry;
                 if (entry.isEmpty ())
@@ -71,14 +74,14 @@ template <ComparableEntry T> class TranspositionTable
     {
         size_t index = entry.hash & (tableSize - 1);
         T oldEntry = table[index];
-        if (entry >= oldEntry)
-            {
-                return false;
-            }
-        else
+        if (oldEntry.pullable (entry))
             {
                 entry = oldEntry;
                 return true;
+            }
+        else
+            {
+                return false;
             }
     }
 };

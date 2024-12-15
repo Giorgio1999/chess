@@ -14,13 +14,17 @@ class TranspositionTableEntry
     {
         return depth == -1;
     }
+    bool
+    pushable (const TranspositionTableEntry &b) const
+    {
+        return true;
+    }
+    bool
+    pullable (const TranspositionTableEntry &b) const
+    {
+        return b.depth >= depth;
+    }
 };
-
-bool
-operator>= (const TranspositionTableEntry &a, const TranspositionTableEntry &b)
-{
-    return true;
-}
 
 chess::transposition::TranspositionTable<TranspositionTableEntry> transpositionTable;
 
