@@ -101,7 +101,7 @@ TEST (board_tests, board_colorboards_test)
     std::vector<std::string> stringmoves = { "e2e3", "e7e6", "d2d4", "d7d5", "g1f3", "g8f6", "c1d2", "c8d7", "h1g1", "h8g8", "d1e2", "d8e7", "e1d1", "e8d8", "h2h8q", "h7h1r" };
     chess::board::Board b;
     chess::fen::parse (chess::consts::startpos, b);
-    for (int i = 0; i < stringmoves.size (); i++)
+    for (size_t i = 0; i < stringmoves.size (); i++)
         {
             chess::consts::move move = chess::moves::string2move (stringmoves[i]);
             std::cout << chess::moves::move2string (move) << std::endl;

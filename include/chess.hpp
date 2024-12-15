@@ -12,6 +12,7 @@
 #include "fen.hpp"
 #include "timer.hpp"
 #include "hash.hpp"
+#include "transpositionTable.hpp"
 
 namespace chess
 {

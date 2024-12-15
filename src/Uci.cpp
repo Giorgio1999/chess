@@ -214,6 +214,15 @@ ucinewgame (chess::engine::Engine &engine, std::string _command)
     return "";
 }
 
+std::string
+setoption (chess::engine::Engine &engine, std::string _command)
+{
+    std::vector<std::string> args;
+    Split (_command, args);
+    engine.SetOption (args);
+    return "";
+}
+
 void
 Split (std::string &command, std::vector<std::string> &args)
 {
@@ -246,6 +255,7 @@ Uci::Uci ()
     commands["legalmoves"] = legalmoves;
     commands["bench"] = bench;
     commands["ucinewgame"] = ucinewgame;
+    commands["setoption"] = setoption;
 }
 consts::Command
 Uci::operator[] (std::string _command)

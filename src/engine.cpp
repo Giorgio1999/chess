@@ -19,8 +19,18 @@ Engine::Introduce ()
 {
     std::string out = "id name " + name + " " + std::to_string (version_major) + "." + std::to_string (version_minor) + "." + std::to_string (version_patch);
     out += " chess " + std::to_string (chess_VERSION_MAJOR) + "." + std::to_string (chess_VERSION_MINOR) + "." + std::to_string (chess_VERSION_PATCH) + " " + consts::CONFIGURATION + "\n";
-    out += "id author " + author;
+    out += "id author " + author + "\n";
+    for (const auto &option : options)
+        {
+            out += option.second.print () + "\n";
+        }
     return out;
+}
+void
+Engine::SetOption (const std::vector<std::string> &args)
+{
+    options[args[0]].setValue (std::stoi (args[1]));
+    update (*this);
 }
 void
 Engine::Stop ()

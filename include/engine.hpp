@@ -11,6 +11,63 @@ namespace chess
 {
 namespace engine
 {
+class option
+{
+  private:
+    std::string id;
+    std::string type;
+    std::string default_value;
+    std::string min;
+    std::string max;
+    std::string var;
+    int value;
+
+  public:
+    option () {}
+    option (std::initializer_list<std::string> initList)
+    {
+        auto start = initList.begin ();
+        id = *start;
+        start++;
+        type = *start;
+        start++;
+        default_value = *start;
+        start++;
+        min = *start;
+        start++;
+        max = *start;
+        start++;
+        var = *start;
+        value = std::stoi (default_value);
+    }
+    std::string
+    print () const
+    {
+        std::string res = "";
+        res += "name " + id;
+        res += " type " + type;
+        res += " default " + default_value;
+        res += " min " + min;
+        res += " max " + max;
+        return res;
+    }
+    std::string
+    getId () const
+    {
+        return id;
+    }
+    void
+    setValue (const int &_value)
+    {
+        value = _value;
+    }
+    int
+    getValue ()
+    {
+        return value;
+    }
+};
+
 class Engine
 {
   private:
@@ -20,6 +77,7 @@ class Engine
     int version_minor = 0;
     int version_patch = 0;
     std::function<std::string (Engine &)> search;
+    std::function<void (Engine &)> update;
     bool stop = false;
     bool ready = false;
     chess::board::Board board;
@@ -28,6 +86,7 @@ class Engine
     chess::timer::Timer timer;
     chess::consts::hash currentHash;
     std::vector<chess::consts::hash> repetitionTable;
+    std::unordered_map<std::string, chess::engine::option> options;
 
   public:
     Engine (std::string name, std::string author)
@@ -39,6 +98,18 @@ class Engine
         chess::hash::init_hash_table ();
         gameHistory.reserve (1000);
         repetitionTable.reserve (1000);
+    }
+
+    void
+    AddOption (const chess::engine::option &option)
+    {
+        options[option.getId ()] = option;
+    }
+    void SetOption (const std::vector<std::string> &args);
+    int
+    GetOption (const std::string &id)
+    {
+        return options[id].getValue ();
     }
 
     std::string Introduce ();
@@ -163,6 +234,11 @@ class Engine
     SetSearch (std::function<std::string (Engine &)> _search)
     {
         search = _search;
+    }
+    void
+    SetUpdate (std::function<void (Engine &)> _update)
+    {
+        update = _update;
     }
     void
     SetReady (bool _ready)

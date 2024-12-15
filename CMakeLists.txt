@@ -6,13 +6,13 @@ set(CMAKE_CXX_FLAGS_RELEASE
     "-Ofast"
     CACHE STRING "Compiler flags for release build" FORCE)
 
-project(chess VERSION 1.5.0)
+project(chess VERSION 1.6.0)
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_library(chess STATIC ${SOURCES})
 
 target_include_directories(chess PUBLIC include ${CMAKE_CURRENT_BINARY_DIR})
 
-set_target_properties(chess PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+set_target_properties(chess PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED ON)
 
 target_compile_options(
   chess
@@ -33,6 +33,8 @@ target_compile_options(
 target_link_options(chess PRIVATE $<$<CONFIG:Profile>:-pg>)
 
 add_executable(magicGenerator src/magicGenerator.cpp)
+set_target_properties(magicGenerator PROPERTIES CXX_STANDARD 20
+                                                CXX_STANDARD_REQUIRED ON)
 target_include_directories(magicGenerator PUBLIC include
                                                  ${CMAKE_CURRENT_BINARY_DIR})
 set(DATA_FILE "${CMAKE_BINARY_DIR}/magicData.hpp")
@@ -46,7 +48,7 @@ add_dependencies(chess generateMagics)
 
 add_executable(example_program examples/example_program.cpp)
 target_link_libraries(example_program PRIVATE chess)
-set_target_properties(example_program PROPERTIES CXX_STANDARD 17
+set_target_properties(example_program PROPERTIES CXX_STANDARD 20
                                                  CXX_STANDARD_REQUIRED ON)
 target_compile_options(
   example_program
@@ -68,7 +70,7 @@ target_link_options(example_program PRIVATE $<$<CONFIG:Profile>:-pg>)
 
 add_executable(example_engine examples/example_engine.cpp)
 target_link_libraries(example_engine PRIVATE chess)
-set_target_properties(example_engine PROPERTIES CXX_STANDARD 17
+set_target_properties(example_engine PROPERTIES CXX_STANDARD 20
                                                 CXX_STANDARD_REQUIRED ON)
 target_compile_options(
   example_engine
@@ -90,7 +92,7 @@ target_link_options(example_engine PRIVATE $<$<CONFIG:Profile>:-pg>)
 
 add_executable(bench performance/bench.cpp)
 target_link_libraries(bench PRIVATE chess)
-set_target_properties(bench PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+set_target_properties(bench PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED ON)
 target_compile_options(
   bench
   PRIVATE $<$<CONFIG:DEBUG>:-Wall
