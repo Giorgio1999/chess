@@ -33,6 +33,16 @@ Search (chess::engine::Engine &engine)
 {
     bool whiteToPlay = engine.GetBoard ().white_to_play ();
     std::vector<chess::consts::move> legalMoves = engine.GetLegalMoves ();
+    for (chess::consts::move move : legalMoves)
+        {
+            engine.MakeMove (move);
+            TranspositionTableEntry newEntry;
+            newEntry.depth = 1;
+            newEntry.hash = engine.GetCurrentHash ();
+            transpositionTable.push (newEntry);
+            engine.UndoMove ();
+        }
+    std::cout << "info depth 1 hashfull " << (int)((float)transpositionTable.GetFill () / (float)transpositionTable.GetSize () * 1000.) << std::endl;
     return "bestmove " + chess::moves::move2string (legalMoves[0]);
 }
 

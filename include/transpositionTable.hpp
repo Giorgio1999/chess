@@ -34,11 +34,11 @@ template <ComparableEntry T> class TranspositionTable
   public:
     TranspositionTable () {}
     void
-    SetSize (const size_t &size_mb)
+    SetSize (const int &size_mb)
     {
-        size_t entrySize = sizeof (T);
-        size_t size_b = size_mb * 1e6;
-        size_t numberOfEntries = size_b / entrySize;
+        int entrySize = sizeof (T);
+        int size_b = size_mb * 1e6;
+        int numberOfEntries = size_b / entrySize;
         while (numberOfEntries > 0)
             {
                 if (std::ceil (std::log2 (numberOfEntries)) == std::floor (std::log2 (numberOfEntries)))
@@ -50,10 +50,15 @@ template <ComparableEntry T> class TranspositionTable
         tableSize = numberOfEntries;
         table.resize (numberOfEntries);
     }
-    size_t
+    int
     GetFill ()
     {
         return tableFill;
+    }
+    int
+    GetSize ()
+    {
+        return tableSize;
     }
     void
     push (const T &entry)
@@ -63,7 +68,7 @@ template <ComparableEntry T> class TranspositionTable
         if (oldEntry.pushable (entry))
             {
                 table[index] = entry;
-                if (entry.isEmpty ())
+                if (oldEntry.isEmpty ())
                     {
                         tableFill++;
                     }
