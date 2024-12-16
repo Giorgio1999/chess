@@ -61,6 +61,12 @@ template <ComparableEntry T> class TranspositionTable
         return tableSize;
     }
     void
+    Clear ()
+    {
+        table.clear ();
+        tableFill = 0;
+    }
+    void
     push (const T &entry)
     {
         size_t index = entry.hash & (tableSize - 1);

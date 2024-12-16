@@ -162,6 +162,7 @@ class Engine
     {
         gameHistory.clear ();
         repetitionTable.clear ();
+        update (*this);
     }
 
     std::string
