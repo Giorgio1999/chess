@@ -785,7 +785,7 @@ chess::movegenerator::MoveGenerator::GetLegalCaptures (chess::engine::Engine &en
 
     // Remove illegal moves
     persistent_legalMoves.clear ();
-    persistent_pseudo_legalMoves.reserve (218);
+    persistent_legalMoves.reserve (persistent_pseudo_legalMoves.size ());
     filterIllegalMoves (engine, persistent_pseudo_legalMoves, persistent_legalMoves);
 
     return persistent_legalMoves;

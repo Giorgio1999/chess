@@ -49,6 +49,7 @@ Search (chess::engine::Engine &engine)
 void
 Update (chess::engine::Engine &engine)
 {
+    transpositionTable.Clear ();
     transpositionTable.SetSize (engine.GetOption ("hash"));
 }
 
