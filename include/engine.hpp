@@ -283,6 +283,7 @@ class Engine
     }
     bool IsStalemate ();
     bool IsRepetition ();
+    int GetNumberOfRepetitions ();
     bool IsMate ();
     chess::consts::hash
     GetCurrentHash ()

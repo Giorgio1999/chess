@@ -131,6 +131,11 @@ Engine::IsRepetition ()
 {
     return std::count (repetitionTable.begin (), repetitionTable.end (), currentHash) == 2;
 }
+int
+Engine::GetNumberOfRepetitions ()
+{
+    return std::count (repetitionTable.begin (), repetitionTable.end (), currentHash);
+}
 bool
 Engine::IsMate ()
 {
